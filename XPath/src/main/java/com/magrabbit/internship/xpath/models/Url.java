@@ -1,4 +1,4 @@
-package model;
+package com.magrabbit.internship.xpath.models;
 
 import java.sql.Date;
 import java.text.ParseException;

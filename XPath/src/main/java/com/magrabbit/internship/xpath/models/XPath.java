@@ -1,4 +1,4 @@
-package model;
+package com.magrabbit.internship.xpath.models;
 
 public class XPath {
 	private int urlId;
