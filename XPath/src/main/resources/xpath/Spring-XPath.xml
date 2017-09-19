@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<bean id="xpathDAO" class="dao.impl.JdbcXPathDAO">
+	<bean id="xpathDAO" class="com.magrabbit.internship.xpath.dao.impl.JdbcXPathDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
