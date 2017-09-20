@@ -4,4 +4,5 @@ import com.magrabbit.internship.xpath.models.Url;
 
 public interface UrlDAO {
 	public void save(Url url);
+	
 }
