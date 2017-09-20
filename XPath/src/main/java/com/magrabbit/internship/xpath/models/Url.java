@@ -7,19 +7,19 @@ import java.text.SimpleDateFormat;
 public class Url {
 	private int id;
 	private String url;
-	private Date date;	
-	
+	private Date date;
+
 	public Url() {
 	}
-	
+
 	public Url(String url) {
 		super();
 		this.url = url;
 	}
 
-	public Url(int id,String url,String date) {
+	public Url(int id, String url, String date) {
 		super();
-		this.id=id;
+		this.id = id;
 		this.url = url;
 		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
 		try {
@@ -45,12 +45,12 @@ public class Url {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	public String getDate() {
 		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
 		return sfd.format(this.date);
 	}
-	
+
 	public void setDate(String date) {
 		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
 		try {

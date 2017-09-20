@@ -1,10 +1,10 @@
 package com.magrabbit.internship.xpath.models;
 
 public class XPath {
-	private String xPath,uiDisplay,elementId,elementName;
-	
+	private String xPath, uiDisplay, elementId, elementName;
+
 	public XPath() {
-		
+
 	}
 
 	public XPath(int urlId, String xPath, String uiDisplay, String elementId, String elementName) {
@@ -46,7 +46,5 @@ public class XPath {
 	public void setElementName(String elementName) {
 		this.elementName = elementName;
 	}
-	
-	
-	
+
 }

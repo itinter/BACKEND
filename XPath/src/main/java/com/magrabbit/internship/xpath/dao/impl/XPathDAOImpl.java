@@ -9,23 +9,23 @@ import com.magrabbit.internship.xpath.models.XPath;
 
 @Service
 public class XPathDAOImpl implements XPathDAO {
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public void save(XPath xpath) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean testInsertDatabase(XPath xpath) {
 		// TODO viết code insert data into database ở đây
-//		this.jdbcTemplate.update("Câu query insert", 
-//				xpath.getElementName(),
-//				xpath.getxPath()
-//				);
+		// this.jdbcTemplate.update("Câu query insert",
+		// xpath.getElementName(),
+		// xpath.getxPath()
+		// );
 		return true;
 	}
 

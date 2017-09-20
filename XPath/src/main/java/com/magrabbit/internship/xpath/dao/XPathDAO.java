@@ -4,6 +4,6 @@ import com.magrabbit.internship.xpath.models.XPath;
 
 public interface XPathDAO {
 	public void save(XPath xpath);
-	
+
 	boolean testInsertDatabase(XPath xpath);
 }

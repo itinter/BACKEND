@@ -9,19 +9,16 @@ import javax.sql.DataSource;
 import com.magrabbit.internship.xpath.dao.UrlDAO;
 import com.magrabbit.internship.xpath.models.Url;
 
+public class JdbcUrlDAO implements UrlDAO {
 
-
-public class JdbcUrlDAO implements UrlDAO{
-	
 	private DataSource dataSource;
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	public void save(Url url) {
-		String sql = "INSERT INTO Url " +
-				"(url) VALUES (?)";
+		String sql = "INSERT INTO Url " + "(url) VALUES (?)";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
@@ -37,9 +34,10 @@ public class JdbcUrlDAO implements UrlDAO{
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 		}
 	}
-	
+
 }
