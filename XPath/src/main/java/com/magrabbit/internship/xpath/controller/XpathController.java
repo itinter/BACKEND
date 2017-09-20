@@ -1,5 +1,7 @@
 package com.magrabbit.internship.xpath.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,4 +32,15 @@ public class XpathController {
 		xpath.setElementName(xPath);
 		return this.xPathService.inserDatabase(xpath);
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getxpath", method = RequestMethod.GET)
+	public ArrayList<XPath> getXpath(@RequestParam(value = "url") String url){ 
+		System.out.println(url);
+		ArrayList<XPath> abc = this.xPathService.getXpath(url);
+		System.out.println(abc);
+		return abc;
+	}
+	
+	
 }

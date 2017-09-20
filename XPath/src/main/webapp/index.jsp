@@ -1,5 +1,7 @@
 <html>
 <body>
-<h2>Hello</h2>
+	<form action="getxpath" method="get">
+		<input type="text" name="url" /> <input type="submit" value="submit" />
+	</form>
 </body>
 </html>
