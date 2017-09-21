@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.magrabbit.internship.xpath.models.Url;
 import com.magrabbit.internship.xpath.models.XPath;
+import com.magrabbit.internship.xpath.models.XPaths;
 import com.magrabbit.internship.xpath.service.XPathService;
 
 @Controller
@@ -35,11 +37,15 @@ public class XpathController {
 
 	@ResponseBody
 	@RequestMapping(value = "/getxpath", method = RequestMethod.GET)
-	public ArrayList<XPath> getXpath(@RequestParam(value = "url") String url) {
-		System.out.println(url);
-		ArrayList<XPath> abc = this.xPathService.getXpath(url);
-		System.out.println(abc);
-		return abc;
+	public XPaths getXpath(@RequestParam(value = "url") String urlget) {
+		System.out.println(urlget);
+		ArrayList<XPath> lstxpath = this.xPathService.getXpath(urlget);
+		System.out.println(lstxpath);
+		Url url = new Url(urlget);
+		XPaths xpaths = new XPaths();
+		xpaths.setUrl(url);
+		xpaths.setXpath(lstxpath);
+		return xpaths;
 	}
 
 }

@@ -50,7 +50,7 @@ public class XPathServiceImpl implements XPathService {
 
 	}
 
-	public static String getElementName(Element elm) {
+	public static String getElementTagName(Element elm) {
 		int space = elm.toString().indexOf(" ");
 		int brace = elm.toString().indexOf(">");
 		int endIndex = 0;
@@ -58,17 +58,17 @@ public class XPathServiceImpl implements XPathService {
 			endIndex = space;
 		else
 			endIndex = brace;
-		String elmname = elm.toString().substring(1, endIndex);
-		return elmname;
+		String elmTagName = elm.toString().substring(1, endIndex);
+		return elmTagName;
 	}
 
-	public static String isNormal(String str) {
-		str = str.trim();
-		while (str.indexOf("  ") > 0) {
-			str = str.replace("  ", " ");
-		}
-		return str;
-	}
+//	public static String isNormal(String str) {
+//		str = str.trim();
+//		while (str.indexOf("  ") > 0) {
+//			str = str.replace("  ", " ");
+//		}
+//		return str;
+//	}
 
 	public static ArrayList<Attribute> divideAttribute(Attributes attrs) {
 		ArrayList<Attribute> listAttr = new ArrayList<Attribute>();
@@ -80,13 +80,33 @@ public class XPathServiceImpl implements XPathService {
 		}
 		return listAttr;
 	}
+	
+	public static String divideAttributeId(Attributes attrs) {
+		for (Attribute i : attrs) {
+			if (i.getKey().equals("id")) {
+				return i.getValue().toString();
+			}
+		}
+		return null;
+	}
+	
+	public static String divideAttributeName(Attributes attrs) {
+		for (Attribute i : attrs) {
+			if (i.getKey().equals("name")) {
+				return i.getValue().toString();
+			}
+		}
+		return null;
+	}
 
 	public static ArrayList<XPath> GenXpathByAttribute(Element elm) {
 		ArrayList<XPath> lstXpath = new ArrayList<XPath>();
 		if (elm.attributes().asList().size() != 0) {
 			for (Attribute attr : divideAttribute(elm.attributes())) {
 				XPath x = new XPath();
-				x.setxPath("//" + getElementName(elm) + "[@" + attr + "]");
+				x.setxPath("//" + getElementTagName(elm) + "[@" + attr + "]");
+				x.setElementName(divideAttributeName(elm.attributes()));
+				x.setElementId(divideAttributeId(elm.attributes()));
 				lstXpath.add(x);
 			}
 		}

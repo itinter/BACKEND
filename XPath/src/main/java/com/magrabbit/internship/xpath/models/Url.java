@@ -1,13 +1,12 @@
 package com.magrabbit.internship.xpath.models;
 
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
+import java.sql.Timestamp;
 
 public class Url {
 	private int id;
 	private String url;
-	private Date date;
+	private Timestamp date;
 
 	public Url() {
 	}
@@ -15,19 +14,7 @@ public class Url {
 	public Url(String url) {
 		super();
 		this.url = url;
-	}
-
-	public Url(int id, String url, String date) {
-		super();
-		this.id = id;
-		this.url = url;
-		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-		try {
-			this.date = new Date(sfd.parse(date).getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.date = new Timestamp(System.currentTimeMillis());
 	}
 
 	public int getId() {
@@ -47,17 +34,12 @@ public class Url {
 	}
 
 	public String getDate() {
-		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-		return sfd.format(this.date);
+		return date.toString();
 	}
 
-	public void setDate(String date) {
-		SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-		try {
-			this.date = new Date(sfd.parse(date).getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setDate(Timestamp date) {
+		this.date = date;
 	}
+	
+	
 }
