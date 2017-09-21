@@ -2,6 +2,8 @@ package com.magrabbit.internship.xpath.models;
 
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Url {
 	private int id;
@@ -37,8 +39,14 @@ public class Url {
 		return date.toString();
 	}
 
-	public void setDate(Timestamp date) {
-		this.date = date;
+	public void setDate(String date) {
+		SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		try {
+			this.date = (Timestamp) sf.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

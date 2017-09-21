@@ -24,10 +24,10 @@ public class XPathServiceImpl implements XPathService {
 	XPathDAO xPathDao;
 
 	@Override
-	public String inserDatabase(XPath xpath) {
+	public String insertXpathDatabase(int id,XPath xpath) {
 		String mess = "";
 		System.out.println("insert xpath" + xpath.getElementName());
-		if (this.xPathDao.testInsertDatabase(xpath)) {
+		if (this.xPathDao.save(id, xpath)) {
 			mess = "Insert OK !!!";
 		} else {
 			mess = "Insert Failed !!!";

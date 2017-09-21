@@ -12,13 +12,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.magrabbit.internship.xpath.models.Url;
 import com.magrabbit.internship.xpath.models.XPath;
 import com.magrabbit.internship.xpath.models.XPaths;
+import com.magrabbit.internship.xpath.service.UrlService;
 import com.magrabbit.internship.xpath.service.XPathService;
+import com.magrabbit.internship.xpath.service.XPathsService;
 
 @Controller
 public class XpathController {
 
 	@Autowired
 	XPathService xPathService;
+	UrlService urlService;
+	XPathsService xpathsService;
+	static XPaths xpaths;
 
 	@RequestMapping(value = { "/" })
 	public String showHomeScreen() {
@@ -27,13 +32,16 @@ public class XpathController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/insert", method = RequestMethod.GET)
-	public String insertUser(@RequestParam(value = "xPath") String xPath) {
-		System.out.println(xPath);
-		XPath xpath = new XPath();
-		xpath.setElementName(xPath);
-		return this.xPathService.inserDatabase(xpath);
+	@RequestMapping(value = "/save", method = RequestMethod.GET)
+	public String save() {
+		return this.urlService.insertUrlDatabase(xpaths.getUrl());
 	}
+	
+//	@ResponseBody
+//	@RequestMapping(value = "/save", method = RequestMethod.GET)
+//	public String save() {
+//		return this.xpathsService.insertXPathsDatabase(this.xpaths);
+//	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getxpath", method = RequestMethod.GET)
@@ -42,10 +50,7 @@ public class XpathController {
 		ArrayList<XPath> lstxpath = this.xPathService.getXpath(urlget);
 		System.out.println(lstxpath);
 		Url url = new Url(urlget);
-		XPaths xpaths = new XPaths();
-		xpaths.setUrl(url);
-		xpaths.setXpath(lstxpath);
-		return xpaths;
+		this.xpaths = new XPaths(url,lstxpath);
+		return this.xpaths;
 	}
-
 }

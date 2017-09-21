@@ -1,43 +1,33 @@
 package com.magrabbit.internship.xpath.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 
-import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import com.magrabbit.internship.xpath.dao.UrlDAO;
 import com.magrabbit.internship.xpath.models.Url;
 
+@Service
 public class JdbcUrlDAO implements UrlDAO {
 
-	private DataSource dataSource;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	@Override
+	public boolean save(Url url) {
+		this.jdbcTemplate.update("${url.save}",url.getUrl(),url.getDate());
+		return true;
 	}
 
-	public void save(Url url) {
-		String sql = "INSERT INTO Url " + "(url) VALUES (?)";
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, url.getUrl());
-			ps.executeUpdate();
-			ps.close();
+	@Override
+	public int find(String url, Timestamp date) {
+		int id = 0;
+		id = (int)this.jdbcTemplate.queryForObject(
+				"${url.findid}", new Object[] { url,date }, int.class);
 
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
+		return id;
 	}
 
 }

@@ -14,18 +14,9 @@ public class XPathDAOImpl implements XPathDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public void save(XPath xpath) {
+	public boolean save(int id,XPath xpath) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean testInsertDatabase(XPath xpath) {
-		// TODO viết code insert data into database ở đây
-		// this.jdbcTemplate.update("Câu query insert",
-		// xpath.getElementName(),
-		// xpath.getxPath()
-		// );
+		this.jdbcTemplate.update("${xpath.save}",id,xpath.getxPath(),xpath.getUiDisplay(),xpath.getElementId(),xpath.getElementName());
 		return true;
 	}
 
