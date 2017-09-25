@@ -48,6 +48,10 @@ public class Url {
 			e.printStackTrace();
 		}
 	}
+
+	public void setDate(Timestamp date) {
+		this.date = date;
+	}
 	
 	
 }

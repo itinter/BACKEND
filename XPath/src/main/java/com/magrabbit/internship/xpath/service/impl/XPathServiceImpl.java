@@ -24,7 +24,7 @@ public class XPathServiceImpl implements XPathService {
 	XPathDAO xPathDao;
 
 	@Override
-	public String insertXpathDatabase(int id,XPath xpath) {
+	public String insertXpathDatabase(int id, XPath xpath) {
 		String mess = "";
 		System.out.println("insert xpath" + xpath.getElementName());
 		if (this.xPathDao.save(id, xpath)) {
@@ -37,98 +37,80 @@ public class XPathServiceImpl implements XPathService {
 
 	public static Elements getElements(String url) throws IOException {
 		Document doc = Jsoup.parse(new URL(url), 10000);
-		// doc.getAllElements();
 		Elements elements = doc.getAllElements();
 		return elements;
 	}
 
-	public static Attributes getAttributeOfElement(Element elm) {
-		if (elm.attributes().asList().size() != 0) {
-			return elm.attributes();
-		} else
-			return null;
-
-	}
-
-	public static String getElementTagName(Element elm) {
-		int space = elm.toString().indexOf(" ");
-		int brace = elm.toString().indexOf(">");
-		int endIndex = 0;
-		if (space < brace && space > -1)
-			endIndex = space;
-		else
-			endIndex = brace;
-		String elmTagName = elm.toString().substring(1, endIndex);
-		return elmTagName;
-	}
-
-//	public static String isNormal(String str) {
-//		str = str.trim();
-//		while (str.indexOf("  ") > 0) {
-//			str = str.replace("  ", " ");
-//		}
-//		return str;
-//	}
-
 	public static ArrayList<Attribute> divideAttribute(Attributes attrs) {
 		ArrayList<Attribute> listAttr = new ArrayList<Attribute>();
 		for (Attribute i : attrs) {
-			if (i.getKey().equals("id") || i.getKey().equals("class") || i.getKey().equals("name")
+			if (i.getKey().equals("id") // || i.getKey().equals("class") || i.getKey().equals("name")
 					|| i.getKey().equals("href") || i.getKey().equals("src")) {
 				listAttr.add(i);
 			}
 		}
 		return listAttr;
 	}
-	
-	public static String divideAttributeId(Attributes attrs) {
-		for (Attribute i : attrs) {
-			if (i.getKey().equals("id")) {
-				return i.getValue().toString();
-			}
-		}
-		return null;
-	}
-	
-	public static String divideAttributeName(Attributes attrs) {
-		for (Attribute i : attrs) {
-			if (i.getKey().equals("name")) {
-				return i.getValue().toString();
-			}
-		}
-		return null;
-	}
 
 	public static ArrayList<XPath> GenXpathByAttribute(Element elm) {
 		ArrayList<XPath> lstXpath = new ArrayList<XPath>();
 		if (elm.attributes().asList().size() != 0) {
 			for (Attribute attr : divideAttribute(elm.attributes())) {
-				XPath x = new XPath();
-				x.setxPath("//" + getElementTagName(elm) + "[@" + attr + "]");
-				x.setElementName(divideAttributeName(elm.attributes()));
-				x.setElementId(divideAttributeId(elm.attributes()));
-				lstXpath.add(x);
+				XPath xPath = new XPath();
+				xPath.setxPath("//" + elm.tagName() + "[@" + attr + "]");
+				if (elm.hasAttr("id")) {
+					xPath.setElementId(elm.id());
+				}
+				if (elm.hasAttr("name")) {
+					xPath.setElementName(elm.attr("name"));
+				}
+				lstXpath.add(xPath);
 			}
 		}
 		return lstXpath;
 	}
 
+	public static ArrayList<XPath> GenXpathEleNonAttribute(Element elm) {
+		ArrayList<XPath> lstxPath = new ArrayList<XPath>();
+		Element parent = elm.parent();
+		if (parent != null) {
+			if (GenXpathByAttribute(parent) != null) {
+				for (XPath xpathParent : GenXpathByAttribute(parent)) {
+					XPath xpath = new XPath();
+					String x = xpathParent + "/" + elm.tagName();
+					xpath.setxPath(x);
+					lstxPath.add(xpath);
+				}
+			} else {
+				ArrayList<XPath> lstxPathParent = new ArrayList<XPath>();
+				String xpathParent = "/" + elm.tagName();
+				lstxPath = GenXpathEleNonAttribute(elm.parent());
+				for (XPath x : lstxPath) {
+					x.setxPath(x.getxPath() + "/" + xpathParent);
+					lstxPath.add(x);
+				}				
+			}
+		}
+		return lstxPath;
+	}
+
 	@Override
 	public ArrayList<XPath> getXpath(String url) {
-		ArrayList<XPath> xPath = new ArrayList<XPath>();
+		ArrayList<XPath> lstxPath = new ArrayList<XPath>();
 		Elements e;
 		try {
 			e = getElements(url);
 			for (Element i : e) {
 				if (GenXpathByAttribute(i) != null) {
-					xPath.addAll(GenXpathByAttribute(i));
-				}
+					lstxPath.addAll(GenXpathByAttribute(i));
+				} else
+					lstxPath.addAll(GenXpathEleNonAttribute(i));
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return xPath;
+		return lstxPath;
 	}
 
 }

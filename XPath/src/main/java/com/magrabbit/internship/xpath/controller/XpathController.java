@@ -1,5 +1,6 @@
 package com.magrabbit.internship.xpath.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ public class XpathController {
 	@ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
 	public String save() {
-		return this.urlService.insertUrlDatabase(xpaths.getUrl());
+		Url url = new Url("http://google.com");
+		url.setDate(new Timestamp(System.currentTimeMillis()));
+		xpaths.setUrl(url);
+		System.out.println(xpaths.getUrl().toString());
+		return this.urlService.insertUrlDatabase(url);
 	}
 	
 //	@ResponseBody
