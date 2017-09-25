@@ -22,6 +22,8 @@ public class XpathController {
 
 	@Autowired
 	XPathService xPathService;
+	
+	@Autowired
 	UrlService urlService;
 	XPathsService xpathsService;
 	static XPaths xpaths;
