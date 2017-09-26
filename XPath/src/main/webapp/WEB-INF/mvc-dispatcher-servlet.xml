@@ -45,5 +45,6 @@
 	
 	<!-- Config resource mapping -->
 	<mvc:resources mapping="/*" location="/"/>
+	
 
 </beans>

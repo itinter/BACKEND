@@ -35,8 +35,10 @@ public class Url {
 		this.url = url;
 	}
 
-	public String getDate() {
-		return date.toString();
+	
+
+	public Timestamp getDate() {
+		return date;
 	}
 
 	public void setDate(String date) {
@@ -52,6 +54,7 @@ public class Url {
 	public void setDate(Timestamp date) {
 		this.date = date;
 	}
+	
 	
 	
 }

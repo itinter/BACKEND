@@ -19,6 +19,8 @@ public class JdbcUrlDAO implements UrlDAO {
 
 	@Value("${url.save}")
 	private String sqlUrlSave;
+	@Value("${url.findid}")
+	private String sqlUrlFind;
 
 	@Override
 	public boolean save(Url url) {
@@ -35,7 +37,7 @@ public class JdbcUrlDAO implements UrlDAO {
 	@Override
 	public int find(String url, Timestamp date) {
 		int id = 0;
-		id = (int) this.jdbcTemplate.queryForObject("${url.findid}", new Object[] { url, date }, int.class);
+		id = (int) this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date }, int.class);
 
 		return id;
 	}

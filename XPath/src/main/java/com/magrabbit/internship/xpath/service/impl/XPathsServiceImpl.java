@@ -1,9 +1,5 @@
 package com.magrabbit.internship.xpath.service.impl;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +14,7 @@ public class XPathsServiceImpl implements XPathsService{
 
 	@Autowired
 	XPathDAO xPathDao;
+	@Autowired
 	UrlDAO urlDao;
 	
 	
@@ -25,22 +22,14 @@ public class XPathsServiceImpl implements XPathsService{
 	public String insertXPathsDatabase(XPaths xpaths) {
 		String mess = "";
 		if (this.urlDao.save(xpaths.getUrl())) {
-			SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-			Timestamp time;
-			try {
-				time = (Timestamp) sf.parse(xpaths.getUrl().getDate());
-				if(this.urlDao.find(xpaths.getUrl().getUrl(), time)!=0) {
+				if(this.urlDao.find(xpaths.getUrl().getUrl(), xpaths.getUrl().getDate())!=0) {
 					for(XPath xpath:xpaths.getXpath()) {
-						if(this.xPathDao.save(this.urlDao.find(xpaths.getUrl().getUrl(), time),xpath)) {
+						if(this.xPathDao.save(this.urlDao.find(xpaths.getUrl().getUrl(), xpaths.getUrl().getDate()),xpath)) {
 							mess = "Insert OK !!!";
 						}else mess = "Insert Failed !!!";
 					}
 				} else mess = "Insert Failed !!!";
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
+			} else {
 			mess = "Insert Failed !!!";
 		}
 		return mess;

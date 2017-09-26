@@ -1,7 +1,9 @@
 package com.magrabbit.internship.xpath.controller;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,39 +27,43 @@ public class XpathController {
 	
 	@Autowired
 	UrlService urlService;
+	
+	@Autowired
 	XPathsService xpathsService;
-	static XPaths xpaths;
+	static HttpSession session;
 
 	@RequestMapping(value = { "/" })
 	public String showHomeScreen() {
 		System.out.println("Home Xpath");
 		return "index";
 	}
-
-	@ResponseBody
-	@RequestMapping(value = "/save", method = RequestMethod.GET)
-	public String save() {
-		Url url = new Url("http://google.com");
-		url.setDate(new Timestamp(System.currentTimeMillis()));
-		xpaths.setUrl(url);
-		System.out.println(xpaths.getUrl().toString());
-		return this.urlService.insertUrlDatabase(url);
-	}
 	
 //	@ResponseBody
 //	@RequestMapping(value = "/save", method = RequestMethod.GET)
 //	public String save() {
-//		return this.xpathsService.insertXPathsDatabase(this.xpaths);
+//		Url url = new Url("http://google.com");
+//		url.setDate(new Timestamp(System.currentTimeMillis()));
+//		xpaths.setUrl(url);
+//		System.out.println(xpaths.getUrl().toString());
+//		return this.urlService.insertUrlDatabase(url);
 //	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/save", method = RequestMethod.GET)
+	public String save(HttpServletRequest request) {
+		return this.xpathsService.insertXPathsDatabase((XPaths)session.getAttribute("x"));
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getxpath", method = RequestMethod.GET)
-	public XPaths getXpath(@RequestParam(value = "url") String urlget) {
+	public XPaths getXpath(@RequestParam(value = "url") String urlget,HttpServletRequest request) {
 		System.out.println(urlget);
 		ArrayList<XPath> lstxpath = this.xPathService.getXpath(urlget);
 		System.out.println(lstxpath);
 		Url url = new Url(urlget);
-		this.xpaths = new XPaths(url,lstxpath);
-		return this.xpaths;
+		XPaths xpaths = new XPaths(url,lstxpath);
+		session = request.getSession();
+		session.setAttribute("x", xpaths);
+		return xpaths;
 	}
 }
