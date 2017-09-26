@@ -1,7 +1,5 @@
 package com.magrabbit.internship.xpath.service.impl;
 
-import java.sql.Timestamp;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,7 @@ public class UrlServiceImpl implements UrlService{
 	}
 
 	@Override
-	public int selectIdUrlDatabase(String url,Timestamp date) {
+	public int selectIdUrlDatabase(String url,String date) {
 		// TODO Auto-generated method stub
 		int id = this.urlDao.find(url, date);
 		return id;

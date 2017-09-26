@@ -1,6 +1,6 @@
 package com.magrabbit.internship.xpath.dao.impl;
 
-import java.sql.Timestamp;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,10 +35,8 @@ public class JdbcUrlDAO implements UrlDAO {
 	}
 
 	@Override
-	public int find(String url, Timestamp date) {
-		int id = 0;
-		id = (int) this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date }, int.class);
-
+	public int find(String url, String date) {
+		java.lang.Integer id = this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date }, java.lang.Integer.class);
 		return id;
 	}
 

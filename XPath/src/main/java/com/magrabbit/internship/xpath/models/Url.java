@@ -37,12 +37,13 @@ public class Url {
 
 	
 
-	public Timestamp getDate() {
-		return date;
+	public String getDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(date);
 	}
 
 	public void setDate(String date) {
-		SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			this.date = (Timestamp) sf.parse(date);
 		} catch (ParseException e) {
