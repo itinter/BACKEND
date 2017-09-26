@@ -34,7 +34,7 @@ public class JdbcUrlDAO implements UrlDAO {
 
 	@Override
 	public int find(String url, String date) {
-		java.lang.Integer id = this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date }, java.lang.Integer.class);
+		java.lang.Integer id = this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date+"%" }, java.lang.Integer.class);
 		return id;
 	}
 
