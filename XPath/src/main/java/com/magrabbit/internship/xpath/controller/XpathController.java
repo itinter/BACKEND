@@ -1,6 +1,6 @@
 package com.magrabbit.internship.xpath.controller;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,16 +38,6 @@ public class XpathController {
 		return "index";
 	}
 	
-//	@ResponseBody
-//	@RequestMapping(value = "/save", method = RequestMethod.GET)
-//	public String save() {
-//		Url url = new Url("http://google.com");
-//		url.setDate(new Timestamp(System.currentTimeMillis()));
-//		xpaths.setUrl(url);
-//		System.out.println(xpaths.getUrl().toString());
-//		return this.urlService.insertUrlDatabase(url);
-//	}
-	
 	@ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
 	public String save(HttpServletRequest request) {
@@ -58,8 +48,7 @@ public class XpathController {
 	@RequestMapping(value = "/getxpath", method = RequestMethod.GET)
 	public XPaths getXpath(@RequestParam(value = "url") String urlget,HttpServletRequest request) {
 		System.out.println(urlget);
-		ArrayList<XPath> lstxpath = this.xPathService.getXpath(urlget);
-		System.out.println(lstxpath);
+		Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
 		Url url = new Url(urlget);
 		XPaths xpaths = new XPaths(url,lstxpath);
 		session = request.getSession();
