@@ -4,5 +4,5 @@ import com.magrabbit.internship.xpath.models.Url;
 
 public interface UrlService {
 	String insertUrlDatabase(Url url);
-	public int selectIdUrlDatabase(String url,String date);
+	int selectIdUrlDatabase(String url,String date);
 }

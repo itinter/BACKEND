@@ -43,40 +43,17 @@ public class XPathServiceImpl implements XPathService {
 		return elements;
 	}
 
-//	public static ArrayList<Attribute> divideAttribute(Attributes attrs) {
-//		ArrayList<Attribute> listAttr = new ArrayList<Attribute>();
-//		for (Attribute i : attrs) {
-//			if (i.getKey().equals("id") // || i.getKey().equals("class") || i.getKey().equals("name")
-//					|| i.getKey().equals("href") || i.getKey().equals("src")) {
-//				listAttr.add(i);
-//			}
-//		}
-//		return listAttr;
-//	}
-
 	public static XPath GenXpathByAttributeId(Element elm) {
 		
 		if(!elm.id().equals("")) {
 			XPath xpath = new XPath();
-			xpath.setxPath("//*[@id=\"" + elm.attr("id") + "\"]");
+			xpath.setxPath("//*[@id='" + elm.attr("id") + "']");
 			xpath.setElementId(elm.id());
 			if (elm.hasAttr("name")) {
 				xpath.setElementName(elm.attr("name"));
 			}
 			return xpath;
 		} else return null;
-//		if (elm.attributes().asList().size() != 0) {
-//			for (Attribute attr : divideAttribute(elm.attributes())) {
-//				XPath xPath = new XPath();
-//				xPath.setxPath("//" + elm.tagName() + "[@" + attr + "]");
-//				if (elm.hasAttr("id")) {
-//					xPath.setElementId(elm.id());
-//				}
-//				if (elm.hasAttr("name")) {
-//					xPath.setElementName(elm.attr("name"));
-//				}
-//			}
-//		}
 	}
 
 	public static int checkSiblingIndexLikeTag(Element elm) {
@@ -109,7 +86,7 @@ public class XPathServiceImpl implements XPathService {
 		if (elm.hasAttr("name")) {
 			xpath.setElementName(elm.attr("name"));
 		}
-		StringBuilder path = new StringBuilder("/" + elm.nodeName());
+		StringBuilder path = new StringBuilder("/" + elm.tagName());
 		if(checkSiblingIndexLikeTag(elm)!=0) {
 			path.append("["+checkSiblingIndexLikeTag(elm)+"]");
 		}
@@ -120,8 +97,8 @@ public class XPathServiceImpl implements XPathService {
 				break;
 			}
 			if(checkSiblingIndexLikeTag(e)!= 0) {
-				path.insert(0, "/" +e.nodeName() + "["+ checkSiblingIndexLikeTag(e) +"]");
-			} else path.insert(0,"/" + e.nodeName());
+				path.insert(0, "/" +e.tagName() + "["+ checkSiblingIndexLikeTag(e) +"]");
+			} else path.insert(0,"/" + e.tagName());
 		}
 		xpath.setxPath(path.toString());
 		

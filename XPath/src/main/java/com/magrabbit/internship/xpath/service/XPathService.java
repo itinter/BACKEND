@@ -5,7 +5,7 @@ import java.util.Set;
 import com.magrabbit.internship.xpath.models.XPath;
 
 public interface XPathService {
-	public Set<XPath> getXpath(String url);
+	Set<XPath> getXpath(String url);
 
 	String insertXpathDatabase(int id,XPath xpath);
 }
