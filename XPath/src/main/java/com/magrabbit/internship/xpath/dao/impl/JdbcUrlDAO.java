@@ -24,7 +24,7 @@ public class JdbcUrlDAO implements UrlDAO {
 	public boolean save(Url url) {
 		boolean rs = false;
 		try {
-			this.jdbcTemplate.update(this.sqlUrlSave, url.getUrl(), url.getDate());
+			this.jdbcTemplate.update(this.sqlUrlSave, url.getUrl(), url.getDate(), url.getHtml());
 			rs = true;
 		} catch (DataAccessException e) {
 			System.out.println("ERROR::: save xpath" + e.getMessage()); 

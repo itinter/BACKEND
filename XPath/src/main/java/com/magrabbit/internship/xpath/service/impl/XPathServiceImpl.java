@@ -34,11 +34,21 @@ public class XPathServiceImpl implements XPathService {
 		return mess;
 	}
 
-	public static Elements getElements(String url) throws IOException {
-		Document doc = Jsoup.parse(new URL(url), 10000);
-		String html = doc.html();
-		String html2 = html.replace("<!doctype html>", "");
-		Document doc2 = Jsoup.parse(html2);
+	public String getHtml(String url){
+		String html=null;
+		try {
+			Document doc = Jsoup.parse(new URL(url), 10000);
+			String html2 = doc.html();
+			html = html2.replace("<!doctype html>", "");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return html;
+	}
+	
+	public static Elements getElements(String html) {	
+		Document doc = Jsoup.parse(html);
 		Elements elements = doc.getAllElements();
 		return elements;
 	}
@@ -110,14 +120,14 @@ public class XPathServiceImpl implements XPathService {
 		Set<XPath> lstxPath = new HashSet<XPath>();
 		Elements e;
 		try {
-			e = getElements(url);
+			e = getElements(getHtml(url));
 			for (Element i : e) {
 				if (GenXpathByAttributeId(i) != null ) {
 					lstxPath.add(GenXpathByAttributeId(i));
 				} else
 					lstxPath.add(GenXpathEleNonAttribute(i));
 			}
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}

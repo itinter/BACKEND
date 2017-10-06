@@ -9,7 +9,8 @@ public class Url {
 	private int id;
 	private String url;
 	private Timestamp date;
-
+	private String html;
+	
 	public Url() {
 	}
 
@@ -54,6 +55,14 @@ public class Url {
 
 	public void setDate(Timestamp date) {
 		this.date = date;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
 	}
 	
 	

@@ -8,4 +8,6 @@ public interface XPathService {
 	Set<XPath> getXpath(String url);
 
 	String insertXpathDatabase(int id,XPath xpath);
+	
+	String getHtml(String url);
 }
