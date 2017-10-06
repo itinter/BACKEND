@@ -10,4 +10,5 @@ public interface XPathService {
 	String insertXpathDatabase(int id,XPath xpath);
 	
 	String getHtml(String url);
+	String getXpath2(String url);
 }

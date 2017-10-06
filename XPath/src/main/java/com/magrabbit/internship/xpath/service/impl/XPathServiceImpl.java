@@ -1,6 +1,5 @@
 package com.magrabbit.internship.xpath.service.impl;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -120,8 +119,10 @@ public class XPathServiceImpl implements XPathService {
 		Set<XPath> lstxPath = new HashSet<XPath>();
 		Elements e;
 		try {
-			e = getElements(getHtml(url));
-			for (Element i : e) {
+			String html = getHtml(url);
+			Document doc = Jsoup.parse(html);
+			Elements elements = doc.body().getAllElements();
+			for (Element i : elements) {
 				if (GenXpathByAttributeId(i) != null ) {
 					lstxPath.add(GenXpathByAttributeId(i));
 				} else
@@ -132,6 +133,28 @@ public class XPathServiceImpl implements XPathService {
 			e1.printStackTrace();
 		}
 		return lstxPath;
+	}
+	
+	public String getXpath2(String url) {
+		String html2="";
+		Elements e;
+		try {
+			String html = getHtml(url);
+			Document doc = Jsoup.parse(html);
+			Elements elements = doc.body().getAllElements();
+			for (Element i : elements) {
+				if (GenXpathByAttributeId(i) != null ) {
+					i.attr("title", GenXpathByAttributeId(i).getxPath());
+				} else
+				i.attr("title", GenXpathEleNonAttribute(i).getxPath());
+			}
+			html2 = doc.html();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return html2;
 	}
 
 }
