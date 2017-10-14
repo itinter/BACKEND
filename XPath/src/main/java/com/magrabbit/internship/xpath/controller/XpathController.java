@@ -5,13 +5,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
@@ -105,12 +104,12 @@ public class XpathController {
 		}
 		urlget = "http://" + urlget;
 		urlget = urlget.substring(0, urlget.length() - 1);
-		Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
-		Url url = new Url(urlget);
-		url.setHtml(this.xPathService.getHtml(urlget));
-		XPaths xpaths = new XPaths(url, lstxpath);
-		session = request.getSession();
-		session.setAttribute("x", xpaths);
+		//Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
+		//Url url = new Url(urlget);
+		//url.setHtml(this.xPathService.getHtml(urlget));
+		//XPaths xpaths = new XPaths(url, lstxpath);
+		//session = request.getSession();
+		//session.setAttribute("x", xpaths);
 		return this.xPathService.getXpath2(urlget);
 	}
 }

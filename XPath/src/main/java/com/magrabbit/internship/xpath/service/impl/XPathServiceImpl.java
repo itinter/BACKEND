@@ -1,6 +1,11 @@
 package com.magrabbit.internship.xpath.service.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -109,7 +114,6 @@ public class XPathServiceImpl implements XPathService {
 	@Override
 	public Set<XPath> getXpath(String url) {
 		Set<XPath> lstxPath = new HashSet<XPath>();
-		Elements e;
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
@@ -129,18 +133,15 @@ public class XPathServiceImpl implements XPathService {
 
 	public String getXpath2(String url) {
 		String html2 = "";
-		Elements e;
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
 			Elements elements = doc.body().getAllElements();
 			for (Element i : elements) {
-				if (GenXpathByAttributeId(i) != null) {
-					i.attr("title", GenXpathByAttributeId(i).getxPath());
-				} else
-					i.attr("title", GenXpathEleNonAttribute(i).getxPath());
+				if (GenXpathByAttributeId(i) != null) i.attr("title", GenXpathByAttributeId(i).getxPath());
+				else i.attr("title", GenXpathEleNonAttribute(i).getxPath());
 			}
-			html2 = doc.body().toString();
+			html2 = doc.html();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -154,6 +155,7 @@ public class XPathServiceImpl implements XPathService {
 		String a="";
 		try {
 			Document doc = Jsoup.connect(url).get();
+			//Document doc2 = urlCss(doc,url);
 			a = doc.html();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -161,6 +163,66 @@ public class XPathServiceImpl implements XPathService {
 		}
 		
 		return a;
+	}
+	
+//-----------------------------------------------------------------------------------
+	
+	public Document urlCss(Document doc, String url) {
+		for (Element link : doc.select("link[rel=stylesheet]")) {
+			String cssFilename = link.attr("href");
+			link.attr("href",getCssPath(cssFilename, url));
+		}
+		return doc;
+	}
+	
+	public static void getContent(String url) {
+		try {
+			URL yahoo = new URL(url);
+			BufferedReader in = new BufferedReader(new InputStreamReader(yahoo.openStream()));
+			String line;
+			//BufferedWriter writer = new BufferedWriter(new FileWriter(new File("C:/test.html")));
+			while ((line = in.readLine()) != null) {
+				//writer.write(line);
+				//writer.newLine();
+				System.out.println(line);
+			}
+		} catch (Exception ex) {
+		}
+	}
+
+	public static String getCssPath(String urlFile, String urlWeb) {
+		String pathFile = "";
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
+			if (checkAvailable(urlFile)) {
+				return urlFile;
+			}
+		} else {
+			String[] parts = urlWeb.split("://");
+			String[] HOST = parts[1].split("/");
+			pathFile = parts[0] + "://" + HOST[0] + urlFile;
+			if (checkAvailable(pathFile)) {
+				return pathFile;
+			}
+		}
+		return pathFile;
+	}
+
+	public static boolean checkAvailable(String urlPath) {
+		boolean rs = false;
+		try {
+			URL u = new URL(urlPath);
+			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			huc.setRequestMethod("GET");
+			huc.connect();
+			if (huc.getResponseCode() == 200) {
+				rs = true;
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return rs;
 	}
 
 }
