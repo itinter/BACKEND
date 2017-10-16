@@ -6,11 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -21,7 +24,7 @@ import com.magrabbit.internship.xpath.service.UrlService;
 import com.magrabbit.internship.xpath.service.XPathService;
 import com.magrabbit.internship.xpath.service.XPathsService;
 
-@RestController
+@RestController  
 public class XpathController {
 
 	@Autowired
@@ -85,6 +88,7 @@ public class XpathController {
 	}
 
 	@RequestMapping(value = "/getxpath2/{urlBase}/**", method = RequestMethod.GET)
+	@ResponseBody
 	public String getXpath2(@PathVariable String urlBase, HttpServletRequest request) {
 		final String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
 		final String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
@@ -107,11 +111,11 @@ public class XpathController {
 		//session = request.getSession();
 		//session.setAttribute("x", xpaths);
 		return this.xPathService.getXpath2(urlget);
-	}
+	} 
 	
-	@RequestMapping(value="/getxpath3", method = RequestMethod.POST)
-	public String getxpath3(@RequestParam("url") String url) {
-		System.out.print("url");
-		return "a";
-	}
+	@RequestMapping(value = "/getxpath3/", method = RequestMethod.POST) 
+	public String getxpath3(@RequestBody String url) {
+		System.out.print("url"+ url);
+		return url;
+	} 
 }
