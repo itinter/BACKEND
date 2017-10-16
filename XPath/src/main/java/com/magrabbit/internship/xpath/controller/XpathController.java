@@ -10,7 +10,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -40,7 +40,6 @@ public class XpathController {
 		return "index";
 	}
 
-	@ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
 	public String save(HttpServletRequest request) {
 		return this.xpathsService.insertXPathsDatabase((XPaths) session.getAttribute("x"));
@@ -60,7 +59,6 @@ public class XpathController {
 	// }
 
 	@RequestMapping(value = "/getxpath/{urlBase}/**", method = RequestMethod.GET)
-	@ResponseBody
 	public XPaths getXpath(@PathVariable String urlBase, HttpServletRequest request) {
 		final String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
 		final String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
@@ -87,7 +85,6 @@ public class XpathController {
 	}
 
 	@RequestMapping(value = "/getxpath2/{urlBase}/**", method = RequestMethod.GET)
-	@ResponseBody
 	public String getXpath2(@PathVariable String urlBase, HttpServletRequest request) {
 		final String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
 		final String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
@@ -110,5 +107,11 @@ public class XpathController {
 		//session = request.getSession();
 		//session.setAttribute("x", xpaths);
 		return this.xPathService.getXpath2(urlget);
+	}
+	
+	@RequestMapping(value="/getxpath3", method = RequestMethod.POST)
+	public String getxpath3(@RequestParam("url") String url) {
+		System.out.print("url");
+		return "a";
 	}
 }
