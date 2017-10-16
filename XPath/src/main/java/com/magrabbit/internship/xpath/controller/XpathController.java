@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -113,9 +114,24 @@ public class XpathController {
 		return this.xPathService.getXpath2(urlget);
 	} 
 	
-	@RequestMapping(value = "/getxpath3/", method = RequestMethod.POST) 
-	public String getxpath3(@RequestBody String url) {
-		System.out.print("url"+ url);
-		return url;
+	@RequestMapping(value = "/getxpath3", method = RequestMethod.GET) 
+	@ResponseStatus(value=HttpStatus.OK)
+	public String getxpath3(@RequestParam("url") String url) {
+		String html = this.xPathService.getXpath2(url);
+		return html;
+	} 
+	
+	@RequestMapping(value = "/getxpath4", method = RequestMethod.POST) 
+	@ResponseStatus(value=HttpStatus.OK)
+	public String getxpath4(@RequestBody String urlInput, HttpServletRequest request) {
+		System.out.println(urlInput);
+		String html = this.xPathService.getXpath2(urlInput);
+		Url url = new Url(urlInput);
+		url.setHtml(html);
+		Set<XPath> lstxpath = this.xPathService.getXpath(urlInput);
+		XPaths xpaths = new XPaths(url, lstxpath);
+		session = request.getSession();
+		session.setAttribute("x", xpaths);
+		return html;
 	} 
 }

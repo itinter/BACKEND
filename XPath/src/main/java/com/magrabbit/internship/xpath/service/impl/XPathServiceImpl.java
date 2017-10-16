@@ -141,7 +141,8 @@ public class XPathServiceImpl implements XPathService {
 				if (GenXpathByAttributeId(i) != null) i.attr("title", GenXpathByAttributeId(i).getxPath());
 				else i.attr("title", GenXpathEleNonAttribute(i).getxPath());
 			}
-			html2 = doc.html();
+			Document doc2 = urlCss(doc,url);
+			html2 = doc2.html();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
