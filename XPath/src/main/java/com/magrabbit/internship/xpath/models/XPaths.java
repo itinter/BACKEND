@@ -1,10 +1,10 @@
 package com.magrabbit.internship.xpath.models;
 
-import java.util.Set;
+import java.util.List;
 
 public class XPaths {
 	private Url url;
-	private Set<XPath> xpath;
+	private List<XPath> xpath;
 	
 	
 	
@@ -12,7 +12,7 @@ public class XPaths {
 		super();
 	}
 	
-	public XPaths(Url url, Set<XPath> xpath) {
+	public XPaths(Url url, List<XPath> xpath) {
 		super();
 		this.url = url;
 		this.xpath = xpath;
@@ -25,11 +25,11 @@ public class XPaths {
 		this.url = url;
 	}
 
-	public Set<XPath> getXpath() {
+	public List<XPath> getXpath() {
 		return xpath;
 	}
 
-	public void setXpath(Set<XPath> xpath) {
+	public void setXpath(List<XPath> xpath) {
 		this.xpath = xpath;
 	}
 	

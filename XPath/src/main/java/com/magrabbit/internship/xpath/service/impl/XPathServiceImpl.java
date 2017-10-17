@@ -6,8 +6,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,17 +29,17 @@ public class XPathServiceImpl implements XPathService {
 	@Autowired
 	XPathDAO xPathDao;
 
-	@Override
-	public String insertXpathDatabase(int id, XPath xpath) {
-		String mess = "";
-		System.out.println("insert xpath" + xpath.getElementName());
-		if (this.xPathDao.save(id, xpath)) {
-			mess = "Insert OK !!!";
-		} else {
-			mess = "Insert Failed !!!";
-		}
-		return mess;
-	}
+//	@Override
+//	public String insertXpathDatabase(int id, XPath xpath) {
+//		String mess = "";
+//		System.out.println("insert xpath" + xpath.getElementName());
+//		if (this.xPathDao.save(id, xpath)) {
+//			mess = "Insert OK !!!";
+//		} else {
+//			mess = "Insert Failed !!!";
+//		}
+//		return mess;
+//	}
 
 	public static Elements getElements(String html) {
 		Document doc = Jsoup.parse(html);
@@ -112,8 +115,8 @@ public class XPathServiceImpl implements XPathService {
 	}
 
 	@Override
-	public Set<XPath> getXpath(String url) {
-		Set<XPath> lstxPath = new HashSet<XPath>();
+	public List<XPath> getXpath(String url) {
+		List<XPath> lstxPath = new ArrayList<XPath>();
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
@@ -138,10 +141,14 @@ public class XPathServiceImpl implements XPathService {
 			Document doc = Jsoup.parse(html);
 			Elements elements = doc.body().getAllElements();
 			for (Element i : elements) {
-				if (GenXpathByAttributeId(i) != null) i.attr("title", GenXpathByAttributeId(i).getxPath());
-				else i.attr("title", GenXpathEleNonAttribute(i).getxPath());
+				if (GenXpathByAttributeId(i) != null) {
+					i.attr("title", GenXpathByAttributeId(i).getxPath());
+				}
+				else {
+					i.attr("title", GenXpathEleNonAttribute(i).getxPath());				
+				}
 			}
-			Document doc2 = urlCss(doc,url);
+			Document doc2 = urlCss(doc, url);
 			html2 = doc2.html();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -153,38 +160,39 @@ public class XPathServiceImpl implements XPathService {
 
 	@Override
 	public String getHtml(String url) {
-		String a="";
+		String a = "";
 		try {
 			Document doc = Jsoup.connect(url).get();
-			//Document doc2 = urlCss(doc,url);
+			// Document doc2 = urlCss(doc,url);
 			a = doc.html();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return a;
 	}
-	
-//-----------------------------------------------------------------------------------
-	
+
+	// -----------------------------------------------------------------------------------
+
 	public Document urlCss(Document doc, String url) {
 		for (Element link : doc.select("link[rel=stylesheet]")) {
 			String cssFilename = link.attr("href");
-			link.attr("href",getCssPath(cssFilename, url));
+			link.attr("href", getCssPath(cssFilename, url));
 		}
 		return doc;
 	}
-	
+
 	public static void getContent(String url) {
 		try {
 			URL yahoo = new URL(url);
 			BufferedReader in = new BufferedReader(new InputStreamReader(yahoo.openStream()));
 			String line;
-			//BufferedWriter writer = new BufferedWriter(new FileWriter(new File("C:/test.html")));
+			// BufferedWriter writer = new BufferedWriter(new FileWriter(new
+			// File("C:/test.html")));
 			while ((line = in.readLine()) != null) {
-				//writer.write(line);
-				//writer.newLine();
+				// writer.write(line);
+				// writer.newLine();
 				System.out.println(line);
 			}
 		} catch (Exception ex) {
@@ -194,25 +202,47 @@ public class XPathServiceImpl implements XPathService {
 	public static String getCssPath(String urlFile, String urlWeb) {
 		String pathFile = "";
 		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
-			if (checkAvailable(urlFile)) {
 				return urlFile;
-			}
 		} else {
 			String[] parts = urlWeb.split("://");
 			String[] HOST = parts[1].split("/");
 			pathFile = parts[0] + "://" + HOST[0] + urlFile;
-			if (checkAvailable(pathFile)) {
-				return pathFile;
+			if (pathFile.startsWith("http")) {
+				if (checkAvailableHttp(pathFile)) {
+					return pathFile;
+				}
+			} else {
+				if (checkAvailableHttps(pathFile)) {
+					return pathFile;
+				}
 			}
 		}
 		return pathFile;
 	}
 
-	public static boolean checkAvailable(String urlPath) {
+	public static boolean checkAvailableHttp(String urlPath) {
 		boolean rs = false;
 		try {
 			URL u = new URL(urlPath);
 			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			huc.setRequestMethod("GET");
+			huc.connect();
+			if (huc.getResponseCode() == 200) {
+				rs = true;
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	public static boolean checkAvailableHttps(String urlPath) {
+		boolean rs = false;
+		try {
+			URL u = new URL(urlPath);
+			HttpsURLConnection huc = (HttpsURLConnection) u.openConnection();
 			huc.setRequestMethod("GET");
 			huc.connect();
 			if (huc.getResponseCode() == 200) {

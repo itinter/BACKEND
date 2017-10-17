@@ -1,8 +1,10 @@
 package com.magrabbit.internship.xpath.dao;
 
+import java.util.List;
+
 import com.magrabbit.internship.xpath.models.XPath;
 
 public interface XPathDAO {
-	public boolean save(int id,XPath xpath);
+	public void save(int id,List<XPath> xpath);
 
 }
