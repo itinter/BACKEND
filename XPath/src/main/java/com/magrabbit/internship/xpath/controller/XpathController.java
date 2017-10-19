@@ -56,7 +56,7 @@ public class XpathController {
 		XPaths xpaths = new XPaths(url, lstxpath);
 		session = request.getSession();
 		session.setAttribute("x", xpaths);
-		System.out.print(html);
+		//System.out.print(html);
 		return html;
 	}
 	

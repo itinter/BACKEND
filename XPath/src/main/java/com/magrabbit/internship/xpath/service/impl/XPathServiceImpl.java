@@ -161,7 +161,7 @@ public class XPathServiceImpl implements XPathService {
 					"    document.getElementById(\"showXpath\").value= x.title;\n" + 
 					"}\n" + 
 					"function copyXpath() {\n" + 
-					"    prompt (\"Copy link, then click OK.\", document.getElementById(\"showXpath\").value);\n" + 
+					"   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"showXpath\").value);\n" + 
 					"	event.stopPropagation();\n" +
 					"	event.preventDefault();\n" +
 					"}\n" + 
@@ -171,7 +171,7 @@ public class XPathServiceImpl implements XPathService {
 					"    position: fixed;\n" + 
 					"    bottom: 0;\n" + 
 					"    right: 0;\n" + 
-					"        width: 500px;\n" + 
+					"    width: 500px;\n" + 
 					"    border: 3px solid #73AD21;\n" + 
 					"}\n" + 
 					"</style>";
