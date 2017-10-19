@@ -139,17 +139,43 @@ public class XPathServiceImpl implements XPathService {
 		try {
 			String html = getHtml(url);
 			Document doc = Jsoup.parse(html);
-			Elements elements = doc.body().getAllElements();
+			//Elements elements = doc.body().getAllElements();
+			Elements elements = doc.body().select("*");
 			for (Element i : elements) {
 				if (GenXpathByAttributeId(i) != null) {
+					i.attr("onmouseenter", "showXpath(this)");
 					i.attr("title", GenXpathByAttributeId(i).getxPath());
+					i.attr("oncontextmenu","copyXpath()");
 				}
 				else {
-					i.attr("title", GenXpathEleNonAttribute(i).getxPath());				
+					i.attr("onmouseenter", "showXpath(this)");
+					i.attr("title", GenXpathEleNonAttribute(i).getxPath());		
+					i.attr("oncontextmenu","copyXpath()");
 				}
 			}
 			Document doc2 = urlCss(doc, url);
 			html2 = doc2.html();
+			String append ="<input id=\"showXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n" + 
+					"<script>\n" + 
+					"function showXpath(x) {\n" + 
+					"    document.getElementById(\"showXpath\").value= x.title;\n" + 
+					"}\n" + 
+					"function copyXpath() {\n" + 
+					"    prompt (\"Copy link, then click OK.\", document.getElementById(\"showXpath\").value);\n" + 
+					"	event.stopPropagation();\n" +
+					"	event.preventDefault();\n" +
+					"}\n" + 
+					"</script>\n" + 
+					"<style type=\"text/css\">\n" + 
+					"#showXpath{\n" + 
+					"    position: fixed;\n" + 
+					"    bottom: 0;\n" + 
+					"    right: 0;\n" + 
+					"        width: 500px;\n" + 
+					"    border: 3px solid #73AD21;\n" + 
+					"}\n" + 
+					"</style>";
+			html2 = html2 + "\n" + append;
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -164,7 +190,7 @@ public class XPathServiceImpl implements XPathService {
 		try {
 			Document doc = Jsoup.connect(url).get();
 			// Document doc2 = urlCss(doc,url);
-			a = doc.html();
+			a = doc.outerHtml();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
