@@ -23,6 +23,7 @@ public class JdbcUrlDAO implements UrlDAO {
 	private String sqlUrlFind;
 	@Value("${url.getoldxpath}")
 	private String sqlUrlGetHtml;
+	
 
 	@Override
 	public boolean save(Url url) {
@@ -43,12 +44,12 @@ public class JdbcUrlDAO implements UrlDAO {
 	}
 	
 	@Override
-	public String getOldXpath(int id) {
-		List<String> html = this.jdbcTemplate.queryForList(this.sqlUrlGetHtml,new Object[] { id }, String.class);	
+	public String getOldXpath(String url, String date) {
+		List<String> html = this.jdbcTemplate.queryForList(this.sqlUrlGetHtml,new Object[] { url, date }, String.class);	
 		if (html.isEmpty()) {
 	        return null;
 	    } else {
-	        return html.get(0);
+	        return html.get(html.size()-1);
 	    }
 	}
 }

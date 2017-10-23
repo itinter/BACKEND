@@ -5,5 +5,5 @@ import com.magrabbit.internship.xpath.models.Url;
 public interface UrlDAO {
 	public boolean save(Url url);
 	public int find(String url,String date);
-	public String getOldXpath(int id);
+	public String getOldXpath(String url, String date);
 }

@@ -62,9 +62,9 @@ public class XpathController {
 	
 	@RequestMapping(value = "/getoldxpath", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public String getoldxpath(HttpServletRequest request) {
-		System.out.println(this.xpathsService.getOldXpath());
-		return this.xpathsService.getOldXpath();
+	public String getoldxpath(@RequestParam("url") String url,@RequestParam("date") String date,HttpServletRequest request) {
+		System.out.println(this.xpathsService.getOldXpath(url,date));
+		return this.xpathsService.getOldXpath(url,date);
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.GET)

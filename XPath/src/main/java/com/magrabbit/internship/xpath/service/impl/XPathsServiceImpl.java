@@ -30,8 +30,8 @@ public class XPathsServiceImpl implements XPathsService {
 	}
 	
 	@Override
-	public String getOldXpath() {
-		return this.urlDao.getOldXpath(47);
+	public String getOldXpath(String url, String date) {
+		return this.urlDao.getOldXpath(url,date);
 	}
 
 }
