@@ -1,5 +1,7 @@
 package com.magrabbit.internship.xpath.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -19,6 +21,8 @@ public class JdbcUrlDAO implements UrlDAO {
 	private String sqlUrlSave;
 	@Value("${url.findid}")
 	private String sqlUrlFind;
+	@Value("${url.getoldxpath}")
+	private String sqlUrlGetHtml;
 
 	@Override
 	public boolean save(Url url) {
@@ -37,5 +41,14 @@ public class JdbcUrlDAO implements UrlDAO {
 		java.lang.Integer id = this.jdbcTemplate.queryForObject(this.sqlUrlFind, new Object[] { url, date+"%" }, java.lang.Integer.class);
 		return id;
 	}
-
+	
+	@Override
+	public String getOldXpath(int id) {
+		List<String> html = this.jdbcTemplate.queryForList(this.sqlUrlGetHtml,new Object[] { id }, String.class);	
+		if (html.isEmpty()) {
+	        return null;
+	    } else {
+	        return html.get(0);
+	    }
+	}
 }

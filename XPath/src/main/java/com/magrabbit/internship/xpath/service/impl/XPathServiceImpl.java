@@ -29,17 +29,17 @@ public class XPathServiceImpl implements XPathService {
 	@Autowired
 	XPathDAO xPathDao;
 
-//	@Override
-//	public String insertXpathDatabase(int id, XPath xpath) {
-//		String mess = "";
-//		System.out.println("insert xpath" + xpath.getElementName());
-//		if (this.xPathDao.save(id, xpath)) {
-//			mess = "Insert OK !!!";
-//		} else {
-//			mess = "Insert Failed !!!";
-//		}
-//		return mess;
-//	}
+	// @Override
+	// public String insertXpathDatabase(int id, XPath xpath) {
+	// String mess = "";
+	// System.out.println("insert xpath" + xpath.getElementName());
+	// if (this.xPathDao.save(id, xpath)) {
+	// mess = "Insert OK !!!";
+	// } else {
+	// mess = "Insert Failed !!!";
+	// }
+	// return mess;
+	// }
 
 	public static Elements getElements(String html) {
 		Document doc = Jsoup.parse(html);
@@ -136,57 +136,99 @@ public class XPathServiceImpl implements XPathService {
 
 	public String getXpath2(String url) {
 		String html2 = "";
-		try {
-			String html = getHtml(url);
-			Document doc = Jsoup.parse(html);
-			//Elements elements = doc.body().getAllElements();
-			Elements elements = doc.body().select("*");
-			for (Element i : elements) {
-				if (GenXpathByAttributeId(i) != null) {
-					i.attr("onmouseenter", "showXpath(this)");
-					i.attr("title", GenXpathByAttributeId(i).getxPath());
-					i.attr("oncontextmenu","copyXpath()");
+		String html = getHtml(url);
+		if (html != null) {
+			try {
+				Document doc = Jsoup.parse(html);
+				// Elements elements = doc.body().getAllElements();
+				Elements elements = doc.body().select("*");
+				for (Element i : elements) {
+					if (GenXpathByAttributeId(i) != null) {
+						//i.attr("onmouseenter", "showXpath(this)");
+						i.attr("xpath", GenXpathByAttributeId(i).getxPath());
+						//i.attr("oncontextmenu", "copyXpath()");
+					} else {
+						//i.attr("onmouseenter", "showXpath(this)");
+						i.attr("xpath", GenXpathEleNonAttribute(i).getxPath());
+						//i.attr("oncontextmenu", "copyXpath()");
+					}
 				}
-				else {
-					i.attr("onmouseenter", "showXpath(this)");
-					i.attr("title", GenXpathEleNonAttribute(i).getxPath());		
-					i.attr("oncontextmenu","copyXpath()");
-				}
+				Document doc2 = urlCss(doc, url);
+				html2 = doc2.html();
+//				String append = "<input id=\"showXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n"
+//						+ "<script>\n" + "function showXpath(x) {\n"
+//						+ "    document.getElementById(\"showXpath\").value= x.title;\n" + "}\n"
+//						+ "function copyXpath() {\n"
+//						+ "   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"showXpath\").value);\n"
+//						+ "	event.stopPropagation();\n" + "	event.preventDefault();\n" + "}\n" + "</script>\n"
+//						+ "<style type=\"text/css\">\n" + "#showXpath{\n" + "    position: fixed;\n"
+//						+ "    bottom: 0;\n" + "    right: 0;\n" + "    width: 500px;\n"
+//						+ "    border: 3px solid #73AD21;\n" + "}\n" + "</style>";
+				String append2 = "<style type=\"text/css\">\n" + 
+						"#showxpath{\n" + 
+						"	position:fixed;\n" + 
+						"	display:none;\n" + 
+						"	background: white;\n" + 
+						"	border: 1px solid gray;\n" + 
+						"	\n" + 
+						"}\n" + 
+						"#copyxpath{\n" + 
+						"	background: red;\n" + 
+						"	color: white;\n" + 
+						"	height: 25px;\n" + 
+						"	width: 40px;\n" + 
+						"	border-radius: 5px;\n" +
+						"}\n" + 
+						"</style>\n" + 
+						"<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>\n" + 
+						"<script>\n" + 
+						"$(function(){\n" + 
+						"  var $showxpath=$('#showxpath');\n" + 
+						"  var $wShowxpath=$showxpath.outerWidth();\n" + 
+						"  var $hShowxpath=$showxpath.outerHeight();\n" + 
+						"  $(window).mouseenter('showxpath', function(e){\n" + 
+						"	var $xpath = $(e.target).attr('xpath');\n" + 
+						"	$(\"#xpath\").text($xpath);\n" + 
+						"    var $leftM=e.clientX, $topM=e.clientY;\n" +
+						"    var $rightM=$(this).width()-$leftM;\n" + 
+						"    var $bottomM=$(this).height()-$topM;\n" + 
+						"    if($rightM < $wShowxpath){\n" + 
+						"      $leftM-=$wShowxpath;\n" + 
+						"    }\n" + 
+						"    if($bottomM < $hShowxpath){\n" + 
+						"      $topM-=$hShowxpath;\n" + 
+						"    }\n" + 
+						"    $showxpath.css({left: $leftM-2, top: $topM-2, display:'inline-block'});\n" + 
+						"    \n" + 
+						"    \n" + 
+						"  }).click(function(){\n" + 
+						"    $showxpath.hide();\n" + 
+						"  });\n" + 
+						"});\n" + 
+						"function copyToClipboard(element) {\n" + 
+						"  var $temp = $(\"<input>\");\n" + 
+						"  $(\"body\").append($temp);\n" + 
+						"  $temp.val($(element).text()).select();\n" + 
+						"  document.execCommand(\"copy\");\n" + 
+						"  $temp.remove();\n" + 
+						"}\n" + 
+						"</script>\n" + 
+						"<div id=\"showxpath\">\n" + 
+						"	<button id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"	<span id=\"xpath\"></span>\n" + 
+						"</div>";
+				html2 = html2 + "\n" + append2;
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-			Document doc2 = urlCss(doc, url);
-			html2 = doc2.html();
-			String append ="<input id=\"showXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n" + 
-					"<script>\n" + 
-					"function showXpath(x) {\n" + 
-					"    document.getElementById(\"showXpath\").value= x.title;\n" + 
-					"}\n" + 
-					"function copyXpath() {\n" + 
-					"   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"showXpath\").value);\n" + 
-					"	event.stopPropagation();\n" +
-					"	event.preventDefault();\n" +
-					"}\n" + 
-					"</script>\n" + 
-					"<style type=\"text/css\">\n" + 
-					"#showXpath{\n" + 
-					"    position: fixed;\n" + 
-					"    bottom: 0;\n" + 
-					"    right: 0;\n" + 
-					"    width: 500px;\n" + 
-					"    border: 3px solid #73AD21;\n" + 
-					"}\n" + 
-					"</style>";
-			html2 = html2 + "\n" + append;
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
-
 		return html2;
 	}
 
 	@Override
 	public String getHtml(String url) {
-		String a = "";
+		String a = null;
 		try {
 			Document doc = Jsoup.connect(url).get();
 			// Document doc2 = urlCss(doc,url);
@@ -228,7 +270,7 @@ public class XPathServiceImpl implements XPathService {
 	public static String getCssPath(String urlFile, String urlWeb) {
 		String pathFile = "";
 		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
-				return urlFile;
+			return urlFile;
 		} else {
 			String[] parts = urlWeb.split("://");
 			String[] HOST = parts[1].split("/");

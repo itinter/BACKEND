@@ -26,7 +26,7 @@ import com.magrabbit.internship.xpath.service.UrlService;
 import com.magrabbit.internship.xpath.service.XPathService;
 import com.magrabbit.internship.xpath.service.XPathsService;
 
-@RestController  
+@RestController
 public class XpathController {
 
 	@Autowired
@@ -45,8 +45,8 @@ public class XpathController {
 		return "index";
 	}
 
-	@RequestMapping(value = "/getxpath4", method = RequestMethod.POST) 
-	@ResponseStatus(value=HttpStatus.OK)
+	@RequestMapping(value = "/getxpath4", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
 	public String getxpath4(@RequestBody String urlInput, HttpServletRequest request) {
 		System.out.println(urlInput);
 		String html = this.xPathService.getXpath2(urlInput);
@@ -56,10 +56,17 @@ public class XpathController {
 		XPaths xpaths = new XPaths(url, lstxpath);
 		session = request.getSession();
 		session.setAttribute("x", xpaths);
-		//System.out.print(html);
+		System.out.print(html);
 		return html;
 	}
 	
+	@RequestMapping(value = "/getoldxpath", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public String getoldxpath(HttpServletRequest request) {
+		System.out.println(this.xpathsService.getOldXpath());
+		return this.xpathsService.getOldXpath();
+	}
+
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
 	public String save(HttpServletRequest request) {
 		System.out.print("save");
@@ -81,63 +88,72 @@ public class XpathController {
 	// return xpaths;
 	// }
 
-//	@RequestMapping(value = "/getxpath/{urlBase}/**", method = RequestMethod.GET)
-//	public XPaths getXpath(@PathVariable String urlBase, HttpServletRequest request) {
-//		final String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
-//		final String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
-//				.toString();
-//
-//		String arguments = new AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
-//
-//		String urlget;
-//		if (null != arguments && !arguments.isEmpty()) {
-//			urlget = urlBase + '/' + arguments;
-//		} else {
-//			urlget = urlBase;
-//		}
-//		urlget = "http://" + urlget;
-//		urlget = urlget.substring(0, urlget.length() - 1);
-//		Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
-//		Url url = new Url(urlget);
-//		url.setHtml(this.xPathService.getHtml(urlget));
-//		System.out.println(this.xPathService.getXpath2(urlget));
-//		XPaths xpaths = new XPaths(url, lstxpath);
-//		session = request.getSession();
-//		session.setAttribute("x", xpaths);
-//		return xpaths;
-//	}
-//
-//	@RequestMapping(value = "/getxpath2/{urlBase}/**", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getXpath2(@PathVariable String urlBase, HttpServletRequest request) {
-//		final String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
-//		final String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
-//				.toString();
-//
-//		String arguments = new AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
-//
-//		String urlget;
-//		if (null != arguments && !arguments.isEmpty()) {
-//			urlget = urlBase + '/' + arguments;
-//		} else {
-//			urlget = urlBase;
-//		}
-//		urlget = "http://" + urlget;
-//		urlget = urlget.substring(0, urlget.length() - 1);
-//		//Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
-//		//Url url = new Url(urlget);
-//		//url.setHtml(this.xPathService.getHtml(urlget));
-//		//XPaths xpaths = new XPaths(url, lstxpath);
-//		//session = request.getSession();
-//		//session.setAttribute("x", xpaths);
-//		return this.xPathService.getXpath2(urlget);
-//	} 
-//	
-//	@RequestMapping(value = "/getxpath3", method = RequestMethod.GET) 
-//	@ResponseStatus(value=HttpStatus.OK)
-//	public String getxpath3(@RequestParam("url") String url) {
-//		String html = this.xPathService.getXpath2(url);
-//		return html;
-//	} 
-	 
+	// @RequestMapping(value = "/getxpath/{urlBase}/**", method = RequestMethod.GET)
+	// public XPaths getXpath(@PathVariable String urlBase, HttpServletRequest
+	// request) {
+	// final String path =
+	// request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
+	// final String bestMatchingPattern =
+	// request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
+	// .toString();
+	//
+	// String arguments = new
+	// AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
+	//
+	// String urlget;
+	// if (null != arguments && !arguments.isEmpty()) {
+	// urlget = urlBase + '/' + arguments;
+	// } else {
+	// urlget = urlBase;
+	// }
+	// urlget = "http://" + urlget;
+	// urlget = urlget.substring(0, urlget.length() - 1);
+	// Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
+	// Url url = new Url(urlget);
+	// url.setHtml(this.xPathService.getHtml(urlget));
+	// System.out.println(this.xPathService.getXpath2(urlget));
+	// XPaths xpaths = new XPaths(url, lstxpath);
+	// session = request.getSession();
+	// session.setAttribute("x", xpaths);
+	// return xpaths;
+	// }
+	//
+	// @RequestMapping(value = "/getxpath2/{urlBase}/**", method =
+	// RequestMethod.GET)
+	// @ResponseBody
+	// public String getXpath2(@PathVariable String urlBase, HttpServletRequest
+	// request) {
+	// final String path =
+	// request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
+	// final String bestMatchingPattern =
+	// request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE)
+	// .toString();
+	//
+	// String arguments = new
+	// AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
+	//
+	// String urlget;
+	// if (null != arguments && !arguments.isEmpty()) {
+	// urlget = urlBase + '/' + arguments;
+	// } else {
+	// urlget = urlBase;
+	// }
+	// urlget = "http://" + urlget;
+	// urlget = urlget.substring(0, urlget.length() - 1);
+	// //Set<XPath> lstxpath = this.xPathService.getXpath(urlget);
+	// //Url url = new Url(urlget);
+	// //url.setHtml(this.xPathService.getHtml(urlget));
+	// //XPaths xpaths = new XPaths(url, lstxpath);
+	// //session = request.getSession();
+	// //session.setAttribute("x", xpaths);
+	// return this.xPathService.getXpath2(urlget);
+	// }
+	//
+	// @RequestMapping(value = "/getxpath3", method = RequestMethod.GET)
+	// @ResponseStatus(value=HttpStatus.OK)
+	// public String getxpath3(@RequestParam("url") String url) {
+	// String html = this.xPathService.getXpath2(url);
+	// return html;
+	// }
+
 }

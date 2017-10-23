@@ -28,5 +28,10 @@ public class XPathsServiceImpl implements XPathsService {
 		} 
 		return result;
 	}
+	
+	@Override
+	public String getOldXpath() {
+		return this.urlDao.getOldXpath(47);
+	}
 
 }
