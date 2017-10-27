@@ -47,7 +47,7 @@ public class JdbcUrlDAO implements UrlDAO {
 	public String getOldXpath(String url, String date) {
 		List<String> html = this.jdbcTemplate.queryForList(this.sqlUrlGetHtml,new Object[] { url, date }, String.class);	
 		if (html.isEmpty()) {
-	        return null;
+	        return "";
 	    } else {
 	        return html.get(html.size()-1);
 	    }

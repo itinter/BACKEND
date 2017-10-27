@@ -155,13 +155,13 @@ public class XPathServiceImpl implements XPathService {
 				}
 				Document doc2 = urlCss(doc, url);
 				html2 = doc2.html();
-//				String append = "<input id=\"showXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n"
+//				String append = "<input id=\"displayXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n"
 //						+ "<script>\n" + "function showXpath(x) {\n"
-//						+ "    document.getElementById(\"showXpath\").value= x.title;\n" + "}\n"
+//						+ "    document.getElementById(\"displayXpath\").value= x.title;\n" + "}\n"
 //						+ "function copyXpath() {\n"
-//						+ "   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"showXpath\").value);\n"
+//						+ "   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"displayXpath\").value);\n"
 //						+ "	event.stopPropagation();\n" + "	event.preventDefault();\n" + "}\n" + "</script>\n"
-//						+ "<style type=\"text/css\">\n" + "#showXpath{\n" + "    position: fixed;\n"
+//						+ "<style type=\"text/css\">\n" + "#displayXpath{\n" + "    position: fixed;\n"
 //						+ "    bottom: 0;\n" + "    right: 0;\n" + "    width: 500px;\n"
 //						+ "    border: 3px solid #73AD21;\n" + "}\n" + "</style>";
 				String append2 = "<style type=\"text/css\">\n" + 
@@ -170,7 +170,7 @@ public class XPathServiceImpl implements XPathService {
 						"	display:none;\n" + 
 						"	background: white;\n" + 
 						"	border: 1px solid gray;\n" + 
-						"	\n" + 
+						"	z-index: 9999;\n" + 
 						"}\n" + 
 						"#copyxpath{\n" + 
 						"	background: red;\n" + 
@@ -269,23 +269,33 @@ public class XPathServiceImpl implements XPathService {
 
 	public static String getCssPath(String urlFile, String urlWeb) {
 		String pathFile = "";
+		String pathFile2= "";
 		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
 			return urlFile;
 		} else {
 			String[] parts = urlWeb.split("://");
 			String[] HOST = parts[1].split("/");
 			pathFile = parts[0] + "://" + HOST[0] + urlFile;
+			pathFile2 = parts[0] +":"+ urlFile;
 			if (pathFile.startsWith("http")) {
 				if (checkAvailableHttp(pathFile)) {
 					return pathFile;
+				} else {
+					if (checkAvailableHttp(pathFile2)) {
+						return pathFile2;
+					}
 				}
 			} else {
 				if (checkAvailableHttps(pathFile)) {
 					return pathFile;
+				} else {
+					if (checkAvailableHttps(pathFile2)) {
+						return pathFile2;
+					}
 				}
 			}
 		}
-		return pathFile;
+		return urlFile;
 	}
 
 	public static boolean checkAvailableHttp(String urlPath) {
