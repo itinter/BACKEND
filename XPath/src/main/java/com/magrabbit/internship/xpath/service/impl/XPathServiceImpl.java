@@ -173,7 +173,7 @@ public class XPathServiceImpl implements XPathService {
 						"	z-index: 9999;\n" + 
 						"}\n" + 
 						"#copyxpath{\n" + 
-						"	background: red;\n" + 
+						"	background: gray;\n" + 
 						"	color: white;\n" + 
 						"	height: 25px;\n" + 
 						"	width: 40px;\n" + 
@@ -192,13 +192,13 @@ public class XPathServiceImpl implements XPathService {
 						"    var $leftM=e.clientX, $topM=e.clientY;\n" +
 						"    var $rightM=$(this).width()-$leftM;\n" + 
 						"    var $bottomM=$(this).height()-$topM;\n" + 
-						"    if($rightM < $wShowxpath){\n" + 
-						"      $leftM-=$wShowxpath;\n" + 
-						"    }\n" + 
-						"    if($bottomM < $hShowxpath){\n" + 
-						"      $topM-=$hShowxpath;\n" + 
-						"    }\n" + 
-						"    $showxpath.css({left: $leftM-2, top: $topM-2, display:'inline-block'});\n" + 
+//						"    if($rightM < $wShowxpath){\n" + 
+//						"      $leftM-=$wShowxpath;\n" + 
+//						"    }\n" + 
+//						"    if($bottomM < $hShowxpath){\n" + 
+//						"      $topM-=$hShowxpath;\n" + 
+//						"    }\n" + 
+						"    $showxpath.css({left: $leftM-2, top: $topM-2, display:'inline'});\n" + 
 						"    \n" + 
 						"    \n" + 
 						"  }).click(function(){\n" + 

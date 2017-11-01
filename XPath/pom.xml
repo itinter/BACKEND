@@ -25,11 +25,11 @@
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-<dependency>
-    <groupId>com.thetransactioncompany</groupId>
-    <artifactId>cors-filter</artifactId>
-    <version>1.8</version>
-</dependency>
+		<dependency>
+			<groupId>com.thetransactioncompany</groupId>
+			<artifactId>cors-filter</artifactId>
+			<version>1.8</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -119,6 +119,7 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.10.3</version>
 		</dependency>
+
 
 	</dependencies>
 	<build>

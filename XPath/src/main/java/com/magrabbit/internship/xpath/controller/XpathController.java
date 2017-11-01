@@ -1,23 +1,21 @@
 package com.magrabbit.internship.xpath.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.HandlerMapping;
 
 import com.magrabbit.internship.xpath.models.Url;
 import com.magrabbit.internship.xpath.models.XPath;
@@ -63,8 +61,19 @@ public class XpathController {
 	@RequestMapping(value = "/getoldxpath", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public String getoldxpath(@RequestParam("url") String url,@RequestParam("date") String date,HttpServletRequest request) {
-		System.out.println(this.xpathsService.getOldXpath(url,date));
-		return this.xpathsService.getOldXpath(url,date);
+		String strDate = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();    
+	         cal.setTime(new SimpleDateFormat("EEE MMM dd yyyy").parse(date));    
+	         cal.add( Calendar.DATE, 1 );      
+	         strDate = sdf.format(cal.getTime());
+		} catch (ParseException e) {
+			return "";
+		}
+		System.out.print(strDate);
+		return this.xpathsService.getOldXpath(url,strDate);
+		//return "";
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
