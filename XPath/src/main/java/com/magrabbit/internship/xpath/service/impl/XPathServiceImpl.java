@@ -164,43 +164,55 @@ public class XPathServiceImpl implements XPathService {
 //						+ "<style type=\"text/css\">\n" + "#displayXpath{\n" + "    position: fixed;\n"
 //						+ "    bottom: 0;\n" + "    right: 0;\n" + "    width: 500px;\n"
 //						+ "    border: 3px solid #73AD21;\n" + "}\n" + "</style>";
-				String append2 = "<style type=\"text/css\">\n" + 
+				String append2 = "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n" + 
+						"<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js\"></script>\n" + 
+						"<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n" + 
+						"<style type=\"text/css\">\n" + 
 						"#showxpath{\n" + 
-						"	position:fixed;\n" + 
-						"	display:none;\n" + 
-						"	background: white;\n" + 
-						"	border: 1px solid gray;\n" + 
-						"	z-index: 9999;\n" + 
+						"        position:fixed;\n" + 
+						"        display:none;\n" + 
+						"        background: white;\n" + 
+						"        border: 1px solid gray;\n" + 
+						"        z-index: 9999;\n" + 
 						"}\n" + 
 						"#copyxpath{\n" + 
-						"	background: gray;\n" + 
-						"	color: white;\n" + 
-						"	height: 25px;\n" + 
-						"	width: 40px;\n" + 
-						"	border-radius: 5px;\n" +
+						"        background: #563d7c;\n" + 
+						"        color: white;\n" + 
+						"        height: 25px;\n" + 
+						"        width: 40px;\n" + 
+						"		padding-top:1px;\n" + 
+						"		padding-left:4px;\n" + 
 						"}\n" + 
 						"</style>\n" + 
 						"<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>\n" + 
 						"<script>\n" + 
 						"$(function(){\n" + 
 						"  var $showxpath=$('#showxpath');\n" + 
-						"  var $wShowxpath=$showxpath.outerWidth();\n" + 
-						"  var $hShowxpath=$showxpath.outerHeight();\n" + 
+						"  var $button1=$('#button1');\n" + 
+						"  var $button2=$('#button2');\n" + 
 						"  $(window).mouseenter('showxpath', function(e){\n" + 
-						"	var $xpath = $(e.target).attr('xpath');\n" + 
-						"	$(\"#xpath\").text($xpath);\n" + 
-						"    var $leftM=e.clientX, $topM=e.clientY;\n" +
+						"    var $xpath = $(e.target).attr('xpath');\n" + 
+						"    $(\"#xpath\").text($xpath);\n" + 
+						"	var $wShowxpath=$showxpath.outerWidth();\n" + 
+						"	var $hShowxpath=$showxpath.outerHeight();\n" + 
+						"\n" + 
+						"    var $leftM=e.clientX, $topM=e.clientY;\n" + 
 						"    var $rightM=$(this).width()-$leftM;\n" + 
 						"    var $bottomM=$(this).height()-$topM;\n" + 
-//						"    if($rightM < $wShowxpath){\n" + 
-//						"      $leftM-=$wShowxpath;\n" + 
-//						"    }\n" + 
-//						"    if($bottomM < $hShowxpath){\n" + 
-//						"      $topM-=$hShowxpath;\n" + 
-//						"    }\n" + 
-						"    $showxpath.css({left: $leftM-2, top: $topM-2, display:'inline'});\n" + 
-						"    \n" + 
-						"    \n" + 
+						"	if($bottomM < $hShowxpath){\n" + 
+						"      $topM-=$hShowxpath; \n" + 
+						"    }\n" + 
+						"	if($rightM < $wShowxpath){\n" + 
+						"      $leftM-=$wShowxpath; \n" + 
+						"	  $button1.css({display:'none'});\n" + 
+						"	  $button2.css({display:'inline-block'});\n" + 
+						"    }else{\n" + 
+						"	  $button1.css({display:'inline-block'});\n" + 
+						"	  $button2.css({display:'none'});\n" + 
+						"	}\n" + 
+						"    $showxpath.css({left: $leftM, top: $topM, display:'inline'});\n" + 
+						"\n" + 
+						"\n" + 
 						"  }).click(function(){\n" + 
 						"    $showxpath.hide();\n" + 
 						"  });\n" + 
@@ -213,9 +225,18 @@ public class XPathServiceImpl implements XPathService {
 						"  $temp.remove();\n" + 
 						"}\n" + 
 						"</script>\n" + 
-						"<div id=\"showxpath\">\n" + 
-						"	<button id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"<div class=\"form-inline\" id=\"showxpath\">\n" + 
+						"    <div class=\"input-group\" id=\"button1\">\n" + 
+						"		<div class=\"input-group-btn\">\n" + 
+						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"		</div>\n" + 
+						"	</div>\n" + 
 						"	<span id=\"xpath\"></span>\n" + 
+						"	<div class=\"input-group\" id=\"button2\">\n" + 
+						"		<div class=\"input-group-btn\">\n" + 
+						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"		</div>\n" + 
+						"	</div>\n" + 
 						"</div>";
 				html2 = html2 + "\n" + append2;
 			} catch (Exception e1) {
