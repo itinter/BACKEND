@@ -19,11 +19,11 @@ public class XPathsServiceImpl implements XPathsService {
 
 	@Override
 	public String insertXPathsDatabase(XPaths xpaths) {
-		String result = "Save Failed";
+		String result = "The system has encountered an error. Please try again later.";
 		if (this.urlDao.save(xpaths.getUrl())) {
 			if (this.urlDao.find(xpaths.getUrl().getUrl(), xpaths.getUrl().getDate()) != 0) {
 				this.xPathDao.save(this.urlDao.find(xpaths.getUrl().getUrl(), xpaths.getUrl().getDate()),xpaths.getXpath());
-				result = "Save Succesed";
+				result = "Saved successfully";
 				}
 		} 
 		return result;

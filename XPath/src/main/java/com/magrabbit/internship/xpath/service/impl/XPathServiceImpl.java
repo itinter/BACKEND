@@ -153,7 +153,7 @@ public class XPathServiceImpl implements XPathService {
 						//i.attr("oncontextmenu", "copyXpath()");
 					}
 				}
-				Document doc2 = urlCss(doc, url);
+				Document doc2 = urlCss(doc,url);
 				html2 = doc2.html();
 //				String append = "<input id=\"displayXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n"
 //						+ "<script>\n" + "function showXpath(x) {\n"
@@ -183,6 +183,14 @@ public class XPathServiceImpl implements XPathService {
 						"		padding-top:1px;\n" + 
 						"		padding-left:4px;\n" + 
 						"}\n" + 
+						"#msg{	\n" + 
+						"	position: fixed;\n" + 
+						"    z-index: 8888;\n" + 
+						"    top: 10%;\n" + 
+						"    left: 50%;\n" + 
+						"    transform: translate(-50%, -50%);\n" + 
+						"    display: none;\n" + 
+						"}" +
 						"</style>\n" + 
 						"<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>\n" + 
 						"<script>\n" + 
@@ -214,7 +222,10 @@ public class XPathServiceImpl implements XPathService {
 						"\n" + 
 						"\n" + 
 						"  }).click(function(){\n" + 
-						"    $showxpath.hide();\n" + 
+						"    $( \"#msg\" ).slideDown(1000);\n" + 
+						"	 setTimeout(function(){\n" + 
+						"		$( \"#msg\" ).slideUp(1000);\n" + 
+						"	 }, 2000);" + 
 						"  });\n" + 
 						"});\n" + 
 						"function copyToClipboard(element) {\n" + 
@@ -237,6 +248,9 @@ public class XPathServiceImpl implements XPathService {
 						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
 						"		</div>\n" + 
 						"	</div>\n" + 
+						"</div>\n" +
+						"<div id=\"msg\" class=\"alert alert-success\">\n" + 
+						"    <strong>Xpath has been copied to clipboard.</strong>\n" + 
 						"</div>";
 				html2 = html2 + "\n" + append2;
 			} catch (Exception e1) {
@@ -354,5 +368,31 @@ public class XPathServiceImpl implements XPathService {
 		}
 		return rs;
 	}
+	
+	//---------------------------------------------------------------
+	
+	public Document urlImg(Document doc, String url) {
+		for (Element img : doc.select("img")) {
+			String imgFilename = img.attr("src");
+			img.attr("src", getImgPath(imgFilename, url));
+		}
+		return doc;
+	}
 
+	public static String getImgPath(String urlFile, String urlWeb) {
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
+			return urlFile;
+		} else {
+			String[] parts = urlWeb.split("://");
+			String[] HOST = parts[1].split("/");
+			String pathFile1 =  "http://" + HOST[0] + urlFile;
+			String pathFile2 =  "https://" + HOST[0] + urlFile;
+			String pathFile3 =  "http://www." + HOST[0] + urlFile;
+			String pathFile4 = 	"https://www." + HOST[0] + urlFile;
+			if (checkAvailableHttp(pathFile1)) return pathFile1;
+			else if(checkAvailableHttps(pathFile2)) return pathFile2;
+			else if (checkAvailableHttps(pathFile4)) return pathFile4;
+			else return pathFile3;
+		}
+	}
 }

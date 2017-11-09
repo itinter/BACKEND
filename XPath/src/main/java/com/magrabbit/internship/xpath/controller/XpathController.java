@@ -46,7 +46,6 @@ public class XpathController {
 	@RequestMapping(value = "/getxpath4", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	public String getxpath4(@RequestBody String urlInput, HttpServletRequest request) {
-		System.out.println(urlInput);
 		String html = this.xPathService.getXpath2(urlInput);
 		Url url = new Url(urlInput);
 		url.setHtml(html);
@@ -54,7 +53,6 @@ public class XpathController {
 		XPaths xpaths = new XPaths(url, lstxpath);
 		session = request.getSession();
 		session.setAttribute("x", xpaths);
-		System.out.print(html);
 		return html;
 	}
 	
@@ -78,9 +76,11 @@ public class XpathController {
 
 	@RequestMapping(value = "/save", method = RequestMethod.GET)
 	public String save(HttpServletRequest request) {
-		System.out.print("save");
-		String rs = this.xpathsService.insertXPathsDatabase((XPaths) session.getAttribute("x"));
-		session.invalidate();
+		String rs = "Save Failed !";
+		if(session.getAttribute("x")!=null) {
+			rs = this.xpathsService.insertXPathsDatabase((XPaths) session.getAttribute("x"));
+			session.invalidate();
+		}
 		return rs;
 	}
 

@@ -49,7 +49,7 @@ public class JdbcUrlDAO implements UrlDAO {
 		if (html.isEmpty()) {
 	        return "";
 	    } else {
-	        return html.get(html.size()-1);
+	        return html.get(0);
 	    }
 	}
 
