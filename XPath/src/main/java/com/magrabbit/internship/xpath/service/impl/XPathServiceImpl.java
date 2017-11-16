@@ -135,37 +135,32 @@ public class XPathServiceImpl implements XPathService {
 	}
 
 	public String getXpath2(String url) {
-		String html2 = "";
+		
 		String html = getHtml(url);
+		return genXpath(url,html);
+	}
+	
+	@Override
+	public String getXpath3(String url, String html) {
+		return genXpath(url,html);
+	}
+
+	String genXpath(String url,String html) {
+		String html2 = "";
 		if (html != null) {
 			try {
 				Document doc = Jsoup.parse(html);
-				// Elements elements = doc.body().getAllElements();
 				Elements elements = doc.body().select("*");
 				for (Element i : elements) {
 					if (GenXpathByAttributeId(i) != null) {
-						//i.attr("onmouseenter", "showXpath(this)");
 						i.attr("xpath", GenXpathByAttributeId(i).getxPath());
-						//i.attr("oncontextmenu", "copyXpath()");
 					} else {
-						//i.attr("onmouseenter", "showXpath(this)");
 						i.attr("xpath", GenXpathEleNonAttribute(i).getxPath());
-						//i.attr("oncontextmenu", "copyXpath()");
 					}
 				}
-				Document doc2 = urlCss(doc,url);
+				Document doc2 = parseLink(doc,url);
 				html2 = doc2.html();
-//				String append = "<input id=\"displayXpath\" _ngcontent-c0=\"\" name=\"a\" placeholder=\"xpath\" type=\"text\">\n"
-//						+ "<script>\n" + "function showXpath(x) {\n"
-//						+ "    document.getElementById(\"displayXpath\").value= x.title;\n" + "}\n"
-//						+ "function copyXpath() {\n"
-//						+ "   prompt (\"Copy xpath, then click OK.\", document.getElementById(\"displayXpath\").value);\n"
-//						+ "	event.stopPropagation();\n" + "	event.preventDefault();\n" + "}\n" + "</script>\n"
-//						+ "<style type=\"text/css\">\n" + "#displayXpath{\n" + "    position: fixed;\n"
-//						+ "    bottom: 0;\n" + "    right: 0;\n" + "    width: 500px;\n"
-//						+ "    border: 3px solid #73AD21;\n" + "}\n" + "</style>";
-				String append2 = "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n" + 
-						"<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js\"></script>\n" + 
+				String append2 = "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js\"></script>\n" + 
 						"<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n" + 
 						"<style type=\"text/css\">\n" + 
 						"#showxpath{\n" + 
@@ -185,14 +180,81 @@ public class XPathServiceImpl implements XPathService {
 						"}\n" + 
 						"#msg{	\n" + 
 						"	position: fixed;\n" + 
-						"    z-index: 8888;\n" + 
 						"    top: 10%;\n" + 
 						"    left: 50%;\n" + 
 						"    transform: translate(-50%, -50%);\n" + 
 						"    display: none;\n" + 
-						"}" +
+						"z-index: 9999;\n" +
+						"}\n" + 
+						".alert {\n" + 
+						"padding: 8px 35px 8px 14px;\n" + 
+						"margin-bottom: 18px;\n" + 
+						"color: #c09853;\n" + 
+						"text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);\n" + 
+						"background-color: #fcf8e3;\n" + 
+						"border: 1px solid #fbeed5;\n" + 
+						"-webkit-border-radius: 4px;\n" + 
+						"-moz-border-radius: 4px;\n" + 
+						"border-radius: 4px;\n" + 
+						"}\n" + 
+						".alert-success {\n" + 
+						"color: #468847;\n" + 
+						"background-color: #dff0d8;\n" + 
+						"border-color: #d6e9c6;\n" + 
+						"}\n" + 
+						".btn-primary {\n" + 
+						"    color: #fff;\n" + 
+						"    background-color: #337ab7;\n" + 
+						"    border-color: #2e6da4;\n" + 
+						"}\n" + 
+						".btn {\n" + 
+						"    display: inline-block;\n" + 
+						"    padding: 6px 12px;\n" + 
+						"    margin-bottom: 0;\n" + 
+						"    font-size: 14px;\n" + 
+						"    font-weight: 400;\n" + 
+						"    line-height: 1.42857143;\n" + 
+						"    text-align: center;\n" + 
+						"    white-space: nowrap;\n" + 
+						"    vertical-align: middle;\n" + 
+						"    -ms-touch-action: manipulation;\n" + 
+						"    touch-action: manipulation;\n" + 
+						"    cursor: pointer;\n" + 
+						"    -webkit-user-select: none;\n" + 
+						"    -moz-user-select: none;\n" + 
+						"    -ms-user-select: none;\n" + 
+						"    user-select: none;\n" + 
+						"    background-image: none;\n" + 
+						"    border: 1px solid transparent;\n" + 
+						"    border-radius: 4px;\n" + 
+						".input-group-btn {\n" + 
+						"    position: relative;\n" + 
+						"    font-size: 0;\n" + 
+						"    white-space: nowrap;\n" + 
+						"}\n" + 
+						".input-group {\n" + 
+						"    position: relative;\n" + 
+						"    display: -webkit-box;\n" + 
+						"    display: -webkit-flex;\n" + 
+						"    display: -ms-flexbox;\n" + 
+						"    display: flex;\n" + 
+						"    width: 100%;\n" + 
+						"}\n" + 
+						".form-inline {\n" + 
+						"    display: -webkit-box;\n" + 
+						"    display: -webkit-flex;\n" + 
+						"    display: -ms-flexbox;\n" + 
+						"    display: flex;\n" + 
+						"    -webkit-flex-flow: row wrap;\n" + 
+						"    -ms-flex-flow: row wrap;\n" + 
+						"    flex-flow: row wrap;\n" + 
+						"    -webkit-box-align: center;\n" + 
+						"    -webkit-align-items: center;\n" + 
+						"    -ms-flex-align: center;\n" + 
+						"    align-items: center;\n" + 
+						"}\n" + 
+						"}\n" + 
 						"</style>\n" + 
-						"<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js\"></script>\n" + 
 						"<script>\n" + 
 						"$(function(){\n" + 
 						"  var $showxpath=$('#showxpath');\n" + 
@@ -222,11 +284,13 @@ public class XPathServiceImpl implements XPathService {
 						"\n" + 
 						"\n" + 
 						"  }).click(function(){\n" + 
-						"    $( \"#msg\" ).slideDown(1000);\n" + 
+						"	 $( \"#msg\" ).slideDown(1000);\n" + 
 						"	 setTimeout(function(){\n" + 
 						"		$( \"#msg\" ).slideUp(1000);\n" + 
-						"	 }, 2000);" + 
-						"  });\n" + 
+						"	 }, 2000);\n" + 
+						"	\n" + 
+						"  })\n" + 
+						"	\n" + 
 						"});\n" + 
 						"function copyToClipboard(element) {\n" + 
 						"  var $temp = $(\"<input>\");\n" + 
@@ -234,6 +298,7 @@ public class XPathServiceImpl implements XPathService {
 						"  $temp.val($(element).text()).select();\n" + 
 						"  document.execCommand(\"copy\");\n" + 
 						"  $temp.remove();\n" + 
+						"  \n" + 
 						"}\n" + 
 						"</script>\n" + 
 						"<div class=\"form-inline\" id=\"showxpath\">\n" + 
@@ -248,7 +313,8 @@ public class XPathServiceImpl implements XPathService {
 						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
 						"		</div>\n" + 
 						"	</div>\n" + 
-						"</div>\n" +
+						"</div>\n" + 
+						"\n" + 
 						"<div id=\"msg\" class=\"alert alert-success\">\n" + 
 						"    <strong>Xpath has been copied to clipboard.</strong>\n" + 
 						"</div>";
@@ -260,7 +326,7 @@ public class XPathServiceImpl implements XPathService {
 		}
 		return html2;
 	}
-
+	
 	@Override
 	public String getHtml(String url) {
 		String a = null;
@@ -304,32 +370,23 @@ public class XPathServiceImpl implements XPathService {
 
 	public static String getCssPath(String urlFile, String urlWeb) {
 		String pathFile = "";
-		String pathFile2= "";
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//")) {
 			return urlFile;
 		} else {
-			String[] parts = urlWeb.split("://");
-			String[] HOST = parts[1].split("/");
-			pathFile = parts[0] + "://" + HOST[0] + urlFile;
-			pathFile2 = parts[0] +":"+ urlFile;
-			if (pathFile.startsWith("http")) {
-				if (checkAvailableHttp(pathFile)) {
+				String[] parts = urlWeb.split("://");
+				String[] HOST = parts[1].split("/");
+				pathFile = parts[0] + "://" + HOST[0] + urlFile;
+				if (pathFile.startsWith("http://")) {
+					//System.out.print(pathFile);
+					//if (checkAvailableHttp(pathFile)) 
 					return pathFile;
-				} else {
-					if (checkAvailableHttp(pathFile2)) {
-						return pathFile2;
-					}
 				}
-			} else {
-				if (checkAvailableHttps(pathFile)) {
+				if (pathFile.startsWith("https://")) {
+					//System.out.print(pathFile);
+					//if (checkAvailableHttps(pathFile)) 
 					return pathFile;
-				} else {
-					if (checkAvailableHttps(pathFile2)) {
-						return pathFile2;
-					}
 				}
 			}
-		}
 		return urlFile;
 	}
 
@@ -374,25 +431,20 @@ public class XPathServiceImpl implements XPathService {
 	public Document urlImg(Document doc, String url) {
 		for (Element img : doc.select("img")) {
 			String imgFilename = img.attr("src");
-			img.attr("src", getImgPath(imgFilename, url));
+			img.attr("src", getCssPath(imgFilename, url));
 		}
 		return doc;
 	}
-
-	public static String getImgPath(String urlFile, String urlWeb) {
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://")) {
-			return urlFile;
-		} else {
-			String[] parts = urlWeb.split("://");
-			String[] HOST = parts[1].split("/");
-			String pathFile1 =  "http://" + HOST[0] + urlFile;
-			String pathFile2 =  "https://" + HOST[0] + urlFile;
-			String pathFile3 =  "http://www." + HOST[0] + urlFile;
-			String pathFile4 = 	"https://www." + HOST[0] + urlFile;
-			if (checkAvailableHttp(pathFile1)) return pathFile1;
-			else if(checkAvailableHttps(pathFile2)) return pathFile2;
-			else if (checkAvailableHttps(pathFile4)) return pathFile4;
-			else return pathFile3;
+	
+	public Document parseLink(Document doc,String url) {
+		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
+			String link = links.attr("href");
+			links.attr("href", getCssPath(link, url));
 		}
+		for (Element links : doc.select("img[src]")) {
+			String link = links.attr("src");
+			links.attr("src", getCssPath(link, url));
+		}
+		return doc;
 	}
 }

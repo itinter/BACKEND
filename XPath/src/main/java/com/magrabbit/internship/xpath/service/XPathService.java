@@ -11,4 +11,5 @@ public interface XPathService {
 	
 	String getHtml(String url);
 	String getXpath2(String url);
+	String getXpath3(String url,String html);
 }
