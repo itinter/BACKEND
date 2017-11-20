@@ -131,7 +131,7 @@ public class XPathServiceImpl implements XPathService {
 						"    left: 50%;\n" + 
 						"    transform: translate(-50%, -50%);\n" + 
 						"    display: none;\n" + 
-						"	z-index: 2147483647;\n" + 
+						"	z-index: 2147483646;\n" + 
 						"}\n" + 
 						".myalert {\n" + 
 						"padding: 8px 35px 8px 14px;\n" + 
@@ -216,19 +216,22 @@ public class XPathServiceImpl implements XPathService {
 						"    var $leftM=e.clientX, $topM=e.clientY;\n" + 
 						"    var $rightM=$(this).width()-$leftM;\n" + 
 						"    var $bottomM=$(this).height()-$topM;\n" + 
-						"	if($bottomM < $hShowxpath){\n" + 
-						"      $topM-=$hShowxpath; \n" + 
-						"    }\n" + 
+						"	if($bottomM <= $hShowxpath){\n" + 
+						"      $topM-=($hShowxpath-2); \n" + 
+						"    }else $topM-=2; \n" + 
 						"	if($rightM < $wShowxpath){\n" + 
-						"      $leftM-=$wShowxpath; \n" + 
+						"      $leftM-=($wShowxpath-2); \n" + 
 						"	  $button1.css({display:'none'});\n" + 
 						"	  $button2.css({display:'inline-block'});\n" + 
 						"    }else{\n" + 
+						"	  $leftM-=2;\n" + 
 						"	  $button1.css({display:'inline-block'});\n" + 
 						"	  $button2.css({display:'none'});\n" + 
 						"	}\n" + 
 						"    $showxpath.css({left: $leftM, top: $topM, display:'inline'});\n" + 
-						"\n" + 
+						"	if($rightM < 2){\n" + 
+						"		$showxpath.css({display:'none'});\n" + 
+						"	}\n" + 
 						"\n" + 
 						"  }).click(function(){\n" + 
 						"	 $( \"#msg\" ).slideDown(1000);\n" + 
@@ -236,6 +239,8 @@ public class XPathServiceImpl implements XPathService {
 						"		$( \"#msg\" ).slideUp(1000);\n" + 
 						"	 }, 2000);\n" + 
 						"	\n" + 
+						"  }).mouseleave('hidexpath',function(){\n" + 
+						"	$showxpath.css({display:'none'});\n" + 
 						"  })\n" + 
 						"	\n" + 
 						"});\n" + 
