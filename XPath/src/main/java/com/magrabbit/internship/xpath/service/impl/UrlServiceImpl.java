@@ -16,7 +16,6 @@ public class UrlServiceImpl implements UrlService{
 	@Override
 	public String insertUrlDatabase(Url url) {
 		String mess = "";
-		System.out.println("insert url" + url.getUrl());
 		if (this.urlDao.save(url)) {
 			mess = "Saved successfully !!!";
 		} else {
