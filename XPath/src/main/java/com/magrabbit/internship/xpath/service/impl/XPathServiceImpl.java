@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -16,30 +13,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.magrabbit.internship.xpath.dao.XPathDAO;
-import com.magrabbit.internship.xpath.models.XPath;
 import com.magrabbit.internship.xpath.service.XPathService;
 
 @Service
 public class XPathServiceImpl implements XPathService {
-
-	@Autowired
-	XPathDAO xPathDao;
-
-	// @Override
-	// public String insertXpathDatabase(int id, XPath xpath) {
-	// String mess = "";
-	// System.out.println("insert xpath" + xpath.getElementName());
-	// if (this.xPathDao.save(id, xpath)) {
-	// mess = "Insert OK !!!";
-	// } else {
-	// mess = "Insert Failed !!!";
-	// }
-	// return mess;
-	// }
 
 	public static Elements getElements(String html) {
 		Document doc = Jsoup.parse(html);
@@ -47,16 +26,10 @@ public class XPathServiceImpl implements XPathService {
 		return elements;
 	}
 
-	public static XPath GenXpathByAttributeId(Element elm) {
+	public static String GenXpathByAttributeId(Element elm) {
 
 		if (!elm.id().equals("")) {
-			XPath xpath = new XPath();
-			xpath.setxPath("//*[@id='" + elm.attr("id") + "']");
-			xpath.setElementId(elm.id());
-			if (elm.hasAttr("name")) {
-				xpath.setElementName(elm.attr("name"));
-			}
-			return xpath;
+			return "//*[@id='" + elm.attr("id") + "']";
 		} else
 			return null;
 	}
@@ -88,11 +61,7 @@ public class XPathServiceImpl implements XPathService {
 			return 0;
 	}
 
-	public static XPath GenXpathEleNonAttribute(Element elm) {
-		XPath xpath = new XPath();
-		if (elm.hasAttr("name")) {
-			xpath.setElementName(elm.attr("name"));
-		}
+	public static String GenXpathEleNonAttribute(Element elm) {
 		StringBuilder path = new StringBuilder("/" + elm.tagName());
 		if (checkSiblingIndexLikeTag(elm) != 0) {
 			path.append("[" + checkSiblingIndexLikeTag(elm) + "]");
@@ -100,7 +69,7 @@ public class XPathServiceImpl implements XPathService {
 		Elements p_elm = elm.parents();
 		for (Element e : p_elm) {
 			if (GenXpathByAttributeId(e) != null) {
-				path.insert(0, GenXpathByAttributeId(e).getxPath());
+				path.insert(0, GenXpathByAttributeId(e));
 				break;
 			} else {
 				if (checkSiblingIndexLikeTag(e) != 0) {
@@ -109,33 +78,11 @@ public class XPathServiceImpl implements XPathService {
 					path.insert(0, "/" + e.tagName());
 			}
 		}
-		xpath.setxPath(path.toString());
 
-		return xpath;
+		return path.toString();
 	}
 
-	@Override
-	public List<XPath> getXpath(String url) {
-		List<XPath> lstxPath = new ArrayList<XPath>();
-		try {
-			String html = getHtml(url);
-			Document doc = Jsoup.parse(html);
-			Elements elements = doc.body().getAllElements();
-			for (Element i : elements) {
-				if (GenXpathByAttributeId(i) != null) {
-					lstxPath.add(GenXpathByAttributeId(i));
-				} else
-					lstxPath.add(GenXpathEleNonAttribute(i));
-			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return lstxPath;
-	}
-
-	public String getXpath2(String url) {
-		
+	public String getXpath2(String url) {	
 		String html = getHtml(url);
 		return genXpath(url,html);
 	}
@@ -153,9 +100,9 @@ public class XPathServiceImpl implements XPathService {
 				Elements elements = doc.body().select("*");
 				for (Element i : elements) {
 					if (GenXpathByAttributeId(i) != null) {
-						i.attr("xpath", GenXpathByAttributeId(i).getxPath());
+						i.attr("xpath", GenXpathByAttributeId(i));
 					} else {
-						i.attr("xpath", GenXpathEleNonAttribute(i).getxPath());
+						i.attr("xpath", GenXpathEleNonAttribute(i));
 					}
 				}
 				Document doc2 = parseLink(doc,url);
@@ -327,7 +274,7 @@ public class XPathServiceImpl implements XPathService {
 		return html2;
 	}
 	
-	@Override
+
 	public String getHtml(String url) {
 		String a = null;
 		try {

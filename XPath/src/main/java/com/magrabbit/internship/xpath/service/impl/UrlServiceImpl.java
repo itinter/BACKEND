@@ -18,7 +18,7 @@ public class UrlServiceImpl implements UrlService{
 		String mess = "";
 		System.out.println("insert url" + url.getUrl());
 		if (this.urlDao.save(url)) {
-			mess = "Insert OK !!!";
+			mess = "Saved successfully !!!";
 		} else {
 			mess = "Insert Failed !!!";
 		}
@@ -30,6 +30,11 @@ public class UrlServiceImpl implements UrlService{
 		// TODO Auto-generated method stub
 		int id = this.urlDao.find(url, date);
 		return id;
+	}
+
+	@Override
+	public String getOldXpath(String url, String date) {
+		return this.urlDao.getOldXpath(url,date);
 	}
 	
 }
