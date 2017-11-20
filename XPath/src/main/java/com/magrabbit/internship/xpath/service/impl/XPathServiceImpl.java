@@ -229,7 +229,7 @@ public class XPathServiceImpl implements XPathService {
 						"	  $button2.css({display:'none'});\n" + 
 						"	}\n" + 
 						"    $showxpath.css({left: $leftM, top: $topM, display:'inline'});\n" + 
-						"	if($rightM < 2){\n" + 
+						"	if($rightM <= 2){\n" + 
 						"		$showxpath.css({display:'none'});\n" + 
 						"	}\n" + 
 						"\n" + 
