@@ -168,7 +168,7 @@ public class XPathServiceImpl implements XPathService {
 						"        display:none;\n" + 
 						"        background: white;\n" + 
 						"        border: 1px solid gray;\n" + 
-						"        z-index: 9999;\n" + 
+						"        z-index: 999999;\n" + 
 						"}\n" + 
 						"#copyxpath{\n" + 
 						"        background: #563d7c;\n" + 
@@ -184,9 +184,9 @@ public class XPathServiceImpl implements XPathService {
 						"    left: 50%;\n" + 
 						"    transform: translate(-50%, -50%);\n" + 
 						"    display: none;\n" + 
-						"z-index: 9999;\n" +
+						"	z-index: 999999;\n" + 
 						"}\n" + 
-						".alert {\n" + 
+						".myalert {\n" + 
 						"padding: 8px 35px 8px 14px;\n" + 
 						"margin-bottom: 18px;\n" + 
 						"color: #c09853;\n" + 
@@ -197,17 +197,17 @@ public class XPathServiceImpl implements XPathService {
 						"-moz-border-radius: 4px;\n" + 
 						"border-radius: 4px;\n" + 
 						"}\n" + 
-						".alert-success {\n" + 
+						".myalert-success {\n" + 
 						"color: #468847;\n" + 
 						"background-color: #dff0d8;\n" + 
 						"border-color: #d6e9c6;\n" + 
 						"}\n" + 
-						".btn-primary {\n" + 
+						".mybtn-primary {\n" + 
 						"    color: #fff;\n" + 
 						"    background-color: #337ab7;\n" + 
 						"    border-color: #2e6da4;\n" + 
 						"}\n" + 
-						".btn {\n" + 
+						".mybtn {\n" + 
 						"    display: inline-block;\n" + 
 						"    padding: 6px 12px;\n" + 
 						"    margin-bottom: 0;\n" + 
@@ -227,12 +227,12 @@ public class XPathServiceImpl implements XPathService {
 						"    background-image: none;\n" + 
 						"    border: 1px solid transparent;\n" + 
 						"    border-radius: 4px;\n" + 
-						".input-group-btn {\n" + 
+						".myinput-group-btn {\n" + 
 						"    position: relative;\n" + 
 						"    font-size: 0;\n" + 
 						"    white-space: nowrap;\n" + 
 						"}\n" + 
-						".input-group {\n" + 
+						".myinput-group {\n" + 
 						"    position: relative;\n" + 
 						"    display: -webkit-box;\n" + 
 						"    display: -webkit-flex;\n" + 
@@ -240,7 +240,7 @@ public class XPathServiceImpl implements XPathService {
 						"    display: flex;\n" + 
 						"    width: 100%;\n" + 
 						"}\n" + 
-						".form-inline {\n" + 
+						".myform-inline {\n" + 
 						"    display: -webkit-box;\n" + 
 						"    display: -webkit-flex;\n" + 
 						"    display: -ms-flexbox;\n" + 
@@ -301,21 +301,21 @@ public class XPathServiceImpl implements XPathService {
 						"  \n" + 
 						"}\n" + 
 						"</script>\n" + 
-						"<div class=\"form-inline\" id=\"showxpath\">\n" + 
-						"    <div class=\"input-group\" id=\"button1\">\n" + 
-						"		<div class=\"input-group-btn\">\n" + 
-						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"<div class=\"myform-inline\" id=\"showxpath\">\n" + 
+						"    <div class=\"myinput-group\" id=\"button1\">\n" + 
+						"		<div class=\"myinput-group-btn\">\n" + 
+						"			<button class=\"mybtn mybtn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
 						"		</div>\n" + 
 						"	</div>\n" + 
 						"	<span id=\"xpath\"></span>\n" + 
-						"	<div class=\"input-group\" id=\"button2\">\n" + 
-						"		<div class=\"input-group-btn\">\n" + 
-						"			<button class=\"btn btn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
+						"	<div class=\"myinput-group\" id=\"button2\">\n" + 
+						"		<div class=\"myinput-group-btn\">\n" + 
+						"			<button class=\"mybtn mybtn-primary\" id=\"copyxpath\" onclick=\"copyToClipboard('#xpath')\">copy</button>\n" + 
 						"		</div>\n" + 
 						"	</div>\n" + 
 						"</div>\n" + 
 						"\n" + 
-						"<div id=\"msg\" class=\"alert alert-success\">\n" + 
+						"<div id=\"msg\" class=\"myalert myalert-success\">\n" + 
 						"    <strong>Xpath has been copied to clipboard.</strong>\n" + 
 						"</div>";
 				html2 = html2 + "\n" + append2;
@@ -347,7 +347,7 @@ public class XPathServiceImpl implements XPathService {
 	public Document urlCss(Document doc, String url) {
 		for (Element link : doc.select("link[rel=stylesheet]")) {
 			String cssFilename = link.attr("href");
-			link.attr("href", getCssPath(cssFilename, url));
+			link.attr("href", getPath(cssFilename, url));
 		}
 		return doc;
 	}
@@ -368,24 +368,27 @@ public class XPathServiceImpl implements XPathService {
 		}
 	}
 
-	public static String getCssPath(String urlFile, String urlWeb) {
+	public static String getPath(String urlFile, String urlWeb) {
 		String pathFile = "";
 		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//")) {
 			return urlFile;
 		} else {
-				String[] parts = urlWeb.split("://");
-				String[] HOST = parts[1].split("/");
-				pathFile = parts[0] + "://" + HOST[0] + urlFile;
-				if (pathFile.startsWith("http://")) {
-					//System.out.print(pathFile);
-					//if (checkAvailableHttp(pathFile)) 
-					return pathFile;
-				}
-				if (pathFile.startsWith("https://")) {
-					//System.out.print(pathFile);
-					//if (checkAvailableHttps(pathFile)) 
-					return pathFile;
-				}
+				try {
+					if(urlFile.startsWith("/")) {
+						pathFile = getDomainName(urlWeb) + urlFile;
+						return pathFile;
+					}else {
+						while(urlFile.startsWith("../")) {
+							urlFile = urlFile.substring(3);
+						}
+						pathFile = getDomainName(urlWeb) + "/" + urlFile;
+						return pathFile;
+					}
+					
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
 		return urlFile;
 	}
@@ -428,23 +431,24 @@ public class XPathServiceImpl implements XPathService {
 	
 	//---------------------------------------------------------------
 	
-	public Document urlImg(Document doc, String url) {
-		for (Element img : doc.select("img")) {
-			String imgFilename = img.attr("src");
-			img.attr("src", getCssPath(imgFilename, url));
+	public Document parseLink(Document doc,String url) {
+		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
+			String link = links.attr("href");
+			links.attr("href", getPath(link, url));
+		}
+		for (Element links : doc.select("img[src]")) {
+			String link = links.attr("src");
+			links.attr("src", getPath(link, url));
 		}
 		return doc;
 	}
 	
-	public Document parseLink(Document doc,String url) {
-		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
-			String link = links.attr("href");
-			links.attr("href", getCssPath(link, url));
-		}
-		for (Element links : doc.select("img[src]")) {
-			String link = links.attr("src");
-			links.attr("src", getCssPath(link, url));
-		}
-		return doc;
+	public static String getDomainName(String url) throws MalformedURLException {
+	    URL uri = new URL(url);
+	    String protocol = uri.getProtocol();
+	    int port = uri.getPort();
+	    String domain = uri.getHost();
+	    if(port==-1) return protocol +"://"+ domain;
+	    else return protocol + "://" + domain + ":" + port; 
 	}
 }
