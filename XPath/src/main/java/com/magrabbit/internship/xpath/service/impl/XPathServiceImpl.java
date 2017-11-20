@@ -115,7 +115,7 @@ public class XPathServiceImpl implements XPathService {
 						"        display:none;\n" + 
 						"        background: white;\n" + 
 						"        border: 1px solid gray;\n" + 
-						"        z-index: 999999;\n" + 
+						"        z-index: 2147483647;\n" + 
 						"}\n" + 
 						"#copyxpath{\n" + 
 						"        background: #563d7c;\n" + 
@@ -131,7 +131,7 @@ public class XPathServiceImpl implements XPathService {
 						"    left: 50%;\n" + 
 						"    transform: translate(-50%, -50%);\n" + 
 						"    display: none;\n" + 
-						"	z-index: 999999;\n" + 
+						"	z-index: 2147483647;\n" + 
 						"}\n" + 
 						".myalert {\n" + 
 						"padding: 8px 35px 8px 14px;\n" + 
