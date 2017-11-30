@@ -6,7 +6,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -292,9 +296,94 @@ public class XPathServiceImpl implements XPathService {
 		return a;
 	}
 
+	// ------------------------------------------------------------------------------------
+	
+	public Document parseLink(Document doc,String url) {
+		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
+			String link = links.attr("href");
+			String csslink = getPath(link,url);
+			String css = getCss(csslink);
+			if(!css.equals("")) {
+				String css2 = ParseCss(css,csslink);
+				doc.appendElement("style").text(css2);
+				links.remove();
+			}else 
+				links.attr("href", getPath(link, url));
+		}
+		for (Element links : doc.select("img[src]")) {
+			String link = links.attr("src");
+			links.attr("src", getPath(link, url));
+		}
+		return doc;
+	}
+	
+	public static String getDomainName(String url) throws MalformedURLException {
+	    URL uri = new URL(url);
+	    String protocol = uri.getProtocol();
+	    int port = uri.getPort();
+	    String domain = uri.getHost();
+	    if(port==-1) return protocol +"://"+ domain;
+	    else return protocol + "://" + domain + ":" + port; 
+	}
+	
+	public static String getPath(String urlFile, String urlWeb) {
+		String pathFile = "";
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//") || urlFile.startsWith("data")) {
+			return urlFile;
+		} else {
+				try {
+					if(urlFile.startsWith("/")) {
+						pathFile = getDomainName(urlWeb) + urlFile;
+						return pathFile;
+					}else {
+						while(urlFile.startsWith("../")) {
+							urlFile = urlFile.substring(3);
+						}
+						pathFile = getDomainName(urlWeb) + "/" + urlFile;
+						return pathFile;
+					}
+					
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		return urlFile;
+	}
+	
+	public String getCss(String url) {
+		String text="";
+		try {
+			URL uri = new URL(url);
+			text = new Scanner( uri.openStream() ).useDelimiter("\\A").next();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return text;
+	}
+	
+	public String ParseCss(String css, String csslink) {
+		List<String> patternlist = new ArrayList<String>();
+		patternlist.add("(?<=url\\(\\')(.*?)(?=\\'\\))");
+		patternlist.add("(?<=url\\()(.*?)(?=\\))");
+		patternlist.add("(?<=url\\(\")(.*?)(?=\"\\))");
+		for(int i=0; i< patternlist.size(); i++) {
+			Pattern pattern = Pattern.compile(patternlist.get(i));
+			Matcher matcher = pattern.matcher(css);
+			while (matcher.find()) {
+			    String urlOld = matcher.group(0);
+			    urlOld=urlOld.trim();
+			    System.out.println(urlOld);
+			    css = css.replace(urlOld, getPath(urlOld, csslink));
+			}
+		}
+		return css;
+	}
+	
 	// -----------------------------------------------------------------------------------
 
-	
+	// Code don't use
 
 	public static void getContent(String url) {
 		try {
@@ -352,66 +441,5 @@ public class XPathServiceImpl implements XPathService {
 	
 	//---------------------------------------------------------------
 	
-	public Document parseLink(Document doc,String url) {
-		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
-			String link = links.attr("href");
-//			String css = getCss(getPath(link,url));
-//			if(!css.equals("")) {
-//				doc.appendElement("style").text(css);
-//				links.remove();
-//			}else 
-				links.attr("href", getPath(link, url));
-		}
-		for (Element links : doc.select("img[src]")) {
-			String link = links.attr("src");
-			links.attr("src", getPath(link, url));
-		}
-		return doc;
-	}
 	
-	public static String getDomainName(String url) throws MalformedURLException {
-	    URL uri = new URL(url);
-	    String protocol = uri.getProtocol();
-	    int port = uri.getPort();
-	    String domain = uri.getHost();
-	    if(port==-1) return protocol +"://"+ domain;
-	    else return protocol + "://" + domain + ":" + port; 
-	}
-	
-	public static String getPath(String urlFile, String urlWeb) {
-		String pathFile = "";
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//")) {
-			return urlFile;
-		} else {
-				try {
-					if(urlFile.startsWith("/")) {
-						pathFile = getDomainName(urlWeb) + urlFile;
-						return pathFile;
-					}else {
-						while(urlFile.startsWith("../")) {
-							urlFile = urlFile.substring(3);
-						}
-						pathFile = getDomainName(urlWeb) + "/" + urlFile;
-						return pathFile;
-					}
-					
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		return urlFile;
-	}
-	
-	public String getCss(String url) {
-		String text="";
-		try {
-			URL uri = new URL(url);
-			text = new Scanner( uri.openStream() ).useDelimiter("\\A").next();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return text;
-	}
 }
