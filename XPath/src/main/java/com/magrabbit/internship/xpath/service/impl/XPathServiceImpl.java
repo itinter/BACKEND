@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -233,12 +234,6 @@ public class XPathServiceImpl implements XPathService {
 						"		$showxpath.css({display:'none'});\n" + 
 						"	}\n" + 
 						"\n" + 
-						"  }).click(function(){\n" + 
-						"	 $( \"#msg\" ).slideDown(1000);\n" + 
-						"	 setTimeout(function(){\n" + 
-						"		$( \"#msg\" ).slideUp(1000);\n" + 
-						"	 }, 2000);\n" + 
-						"	\n" + 
 						"  }).mouseleave('hidexpath',function(){\n" + 
 						"	$showxpath.css({display:'none'});\n" + 
 						"  })\n" + 
@@ -250,7 +245,10 @@ public class XPathServiceImpl implements XPathService {
 						"  $temp.val($(element).text()).select();\n" + 
 						"  document.execCommand(\"copy\");\n" + 
 						"  $temp.remove();\n" + 
-						"  \n" + 
+						"  $( \"#msg\" ).slideDown(1000);\n" + 
+						"	 setTimeout(function(){\n" + 
+						"  $( \"#msg\" ).slideUp(1000);\n" + 
+						" }, 2000);\n" + 
 						"}\n" + 
 						"</script>\n" + 
 						"<div class=\"myform-inline\" id=\"showxpath\">\n" + 
@@ -296,13 +294,7 @@ public class XPathServiceImpl implements XPathService {
 
 	// -----------------------------------------------------------------------------------
 
-	public Document urlCss(Document doc, String url) {
-		for (Element link : doc.select("link[rel=stylesheet]")) {
-			String cssFilename = link.attr("href");
-			link.attr("href", getPath(cssFilename, url));
-		}
-		return doc;
-	}
+	
 
 	public static void getContent(String url) {
 		try {
@@ -320,30 +312,7 @@ public class XPathServiceImpl implements XPathService {
 		}
 	}
 
-	public static String getPath(String urlFile, String urlWeb) {
-		String pathFile = "";
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//")) {
-			return urlFile;
-		} else {
-				try {
-					if(urlFile.startsWith("/")) {
-						pathFile = getDomainName(urlWeb) + urlFile;
-						return pathFile;
-					}else {
-						while(urlFile.startsWith("../")) {
-							urlFile = urlFile.substring(3);
-						}
-						pathFile = getDomainName(urlWeb) + "/" + urlFile;
-						return pathFile;
-					}
-					
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		return urlFile;
-	}
+	
 
 	public static boolean checkAvailableHttp(String urlPath) {
 		boolean rs = false;
@@ -386,7 +355,12 @@ public class XPathServiceImpl implements XPathService {
 	public Document parseLink(Document doc,String url) {
 		for (Element links : doc.select("link[rel=stylesheet],link[as=style]")) {
 			String link = links.attr("href");
-			links.attr("href", getPath(link, url));
+//			String css = getCss(getPath(link,url));
+//			if(!css.equals("")) {
+//				doc.appendElement("style").text(css);
+//				links.remove();
+//			}else 
+				links.attr("href", getPath(link, url));
 		}
 		for (Element links : doc.select("img[src]")) {
 			String link = links.attr("src");
@@ -402,5 +376,42 @@ public class XPathServiceImpl implements XPathService {
 	    String domain = uri.getHost();
 	    if(port==-1) return protocol +"://"+ domain;
 	    else return protocol + "://" + domain + ":" + port; 
+	}
+	
+	public static String getPath(String urlFile, String urlWeb) {
+		String pathFile = "";
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//")) {
+			return urlFile;
+		} else {
+				try {
+					if(urlFile.startsWith("/")) {
+						pathFile = getDomainName(urlWeb) + urlFile;
+						return pathFile;
+					}else {
+						while(urlFile.startsWith("../")) {
+							urlFile = urlFile.substring(3);
+						}
+						pathFile = getDomainName(urlWeb) + "/" + urlFile;
+						return pathFile;
+					}
+					
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		return urlFile;
+	}
+	
+	public String getCss(String url) {
+		String text="";
+		try {
+			URL uri = new URL(url);
+			text = new Scanner( uri.openStream() ).useDelimiter("\\A").next();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return text;
 	}
 }
