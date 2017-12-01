@@ -7,8 +7,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -328,7 +330,7 @@ public class XPathServiceImpl implements XPathService {
 	
 	public static String getPath(String urlFile, String urlWeb) {
 		String pathFile = "";
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//") || urlFile.startsWith("data")) {
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//") || urlFile.startsWith("data:")) {
 			return urlFile;
 		} else {
 				try {
@@ -364,20 +366,40 @@ public class XPathServiceImpl implements XPathService {
 	}
 	
 	public String ParseCss(String css, String csslink) {
-		List<String> patternlist = new ArrayList<String>();
-		patternlist.add("(?<=url\\(\\')(.*?)(?=\\'\\))");
-		patternlist.add("(?<=url\\()(.*?)(?=\\))");
-		patternlist.add("(?<=url\\(\")(.*?)(?=\"\\))");
-		for(int i=0; i< patternlist.size(); i++) {
-			Pattern pattern = Pattern.compile(patternlist.get(i));
+		Set seturl = new HashSet();
+//		List<String> patternlist = new ArrayList<String>();
+//		patternlist.add("(?<=url\\(\\')(.*?)(?=\\'\\))");
+//		patternlist.add("(?<=url\\()(.*?)(?=\\))");
+//		patternlist.add("(?<=url\\(\")(.*?)(?=\"\\))");
+//		for(int i=0; i< patternlist.size(); i++) {
+//			Pattern pattern = Pattern.compile(patternlist.get(i));
+//			Matcher matcher = pattern.matcher(css);
+//			while (matcher.find()) {
+//			    String urlOld = matcher.group(0);
+//			    urlOld=urlOld.trim();
+//			    css = css.replace(urlOld, getPath(urlOld, csslink));
+//			}
+//		}
+		//---------------------------
+			Pattern pattern = Pattern.compile("(?<=url\\()(.*?)(?=\\))");
 			Matcher matcher = pattern.matcher(css);
 			while (matcher.find()) {
 			    String urlOld = matcher.group(0);
 			    urlOld=urlOld.trim();
-			    System.out.println(urlOld);
-			    css = css.replace(urlOld, getPath(urlOld, csslink));
+			    if(urlOld.startsWith("'") || urlOld.startsWith("\"")) {
+			    	urlOld = urlOld.substring(1, urlOld.length() - 1);
+			    	urlOld=urlOld.trim();
+			    }
+			    seturl.add(urlOld);
+			    //css = css.replace(urlOld, getPath(urlOld, csslink));
+			    //System.out.println(urlOld+"--"+getPath(urlOld, csslink));
 			}
-		}
+			System.out.println(seturl);
+			List<String> listurl = new ArrayList<String>(seturl);
+			for(int i=0; i< listurl.size();i++) {
+				css = css.replace(listurl.get(i), getPath(listurl.get(i), csslink));
+			}
+		
 		return css;
 	}
 	
