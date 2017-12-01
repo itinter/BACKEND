@@ -394,7 +394,6 @@ public class XPathServiceImpl implements XPathService {
 			    //css = css.replace(urlOld, getPath(urlOld, csslink));
 			    //System.out.println(urlOld+"--"+getPath(urlOld, csslink));
 			}
-			System.out.println(seturl);
 			List<String> listurl = new ArrayList<String>(seturl);
 			for(int i=0; i< listurl.size();i++) {
 				css = css.replace(listurl.get(i), getPath(listurl.get(i), csslink));
