@@ -81,6 +81,7 @@ public class XpathController {
 	public String save(HttpServletRequest request) {
 		String rs = "Save Failed !";
 		if(session.getAttribute("x")!=null) {
+			System.out.println((Url)session.getAttribute("x"));
 			rs = this.urlService.insertUrlDatabase((Url)session.getAttribute("x"));
 			session.invalidate();
 		}

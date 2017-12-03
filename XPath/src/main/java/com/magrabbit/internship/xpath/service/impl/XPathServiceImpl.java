@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -310,11 +312,15 @@ public class XPathServiceImpl implements XPathService {
 				doc.appendElement("style").text(css2);
 				links.remove();
 			}else 
-				links.attr("href", getPath(link, url));
+				links.attr("href", csslink);
 		}
 		for (Element links : doc.select("img[src]")) {
-			String link = links.attr("src");
-			links.attr("src", getPath(link, url));
+			String imgLink = getPath(links.attr("src"), url);
+			String imgBase64 = convertImgToBase64(imgLink);
+			if(imgBase64!="") {
+				links.attr("src", "data:image/png;base64,"+imgBase64);
+			}else 
+				links.attr("src", imgLink);
 		}
 		return doc;
 	}
@@ -330,7 +336,7 @@ public class XPathServiceImpl implements XPathService {
 	
 	public static String getPath(String urlFile, String urlWeb) {
 		String pathFile = "";
-		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//") || urlFile.startsWith("data:")) {
+		if (urlFile.startsWith("http://") || urlFile.startsWith("https://") || urlFile.startsWith("//") ||  urlFile.startsWith("data:")) {
 			return urlFile;
 		} else {
 				try {
@@ -348,8 +354,8 @@ public class XPathServiceImpl implements XPathService {
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}				
-			}
+				}
+		}
 		return urlFile;
 	}
 	
@@ -396,10 +402,30 @@ public class XPathServiceImpl implements XPathService {
 			}
 			List<String> listurl = new ArrayList<String>(seturl);
 			for(int i=0; i< listurl.size();i++) {
-				css = css.replace(listurl.get(i), getPath(listurl.get(i), csslink));
+				//css = css.replace(listurl.get(i), getPath(listurl.get(i), csslink));
+				String imgLink = getPath(listurl.get(i), csslink);
+				String imgBase64 = convertImgToBase64(imgLink);
+				if(imgBase64!="") {
+					css = css.replace(listurl.get(i), "data:image/png;base64,"+imgBase64);
+				}else css = css.replace(listurl.get(i), imgLink);
 			}
 		
 		return css;
+	}
+	
+	public String convertImgToBase64(String url) {
+		String base64="";
+		try {
+			byte[] imageBytes = IOUtils.toByteArray(new URL(url).openStream());
+			base64 = Base64.getEncoder().encodeToString(imageBytes);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return base64;
 	}
 	
 	// -----------------------------------------------------------------------------------
