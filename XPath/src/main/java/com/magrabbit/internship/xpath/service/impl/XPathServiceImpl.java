@@ -96,7 +96,6 @@ public class XPathServiceImpl implements XPathService {
 		return genXpath(url,html);
 	}
 	
-	@Override
 	public String getXpath3(String url, String html) {
 		return genXpath(url,html);
 	}
@@ -283,6 +282,7 @@ public class XPathServiceImpl implements XPathService {
 			}
 		}
 		return html2;
+		
 	}
 	
 
@@ -309,17 +309,18 @@ public class XPathServiceImpl implements XPathService {
 			String css = getCss(csslink);
 			if(!css.equals("")) {
 				String css2 = ParseCss(css,csslink);
-				doc.appendElement("style").text(css2);
+				doc.append("<style>"+css2+"</style>");
+				//doc.appendElement("style").text(css2);
 				links.remove();
 			}else 
 				links.attr("href", csslink);
 		}
 		for (Element links : doc.select("img[src]")) {
 			String imgLink = getPath(links.attr("src"), url);
-			String imgBase64 = convertImgToBase64(imgLink);
-			if(imgBase64!="") {
-				links.attr("src", "data:image/png;base64,"+imgBase64);
-			}else 
+//			String imgBase64 = convertImgToBase64(imgLink);
+//			if(imgBase64!="") {
+//				links.attr("src", "data:image/png;base64,"+imgBase64);
+//			}else 
 				links.attr("src", imgLink);
 		}
 		return doc;
@@ -402,12 +403,12 @@ public class XPathServiceImpl implements XPathService {
 			}
 			List<String> listurl = new ArrayList<String>(seturl);
 			for(int i=0; i< listurl.size();i++) {
-				//css = css.replace(listurl.get(i), getPath(listurl.get(i), csslink));
 				String imgLink = getPath(listurl.get(i), csslink);
-				String imgBase64 = convertImgToBase64(imgLink);
-				if(imgBase64!="") {
-					css = css.replace(listurl.get(i), "data:image/png;base64,"+imgBase64);
-				}else css = css.replace(listurl.get(i), imgLink);
+//				String imgBase64 = convertImgToBase64(imgLink);
+//				if(imgBase64!="") {
+//					css = css.replace(listurl.get(i), "data:image/png;base64,"+imgBase64);
+//				}else 
+					css = css.replace(listurl.get(i), imgLink);
 			}
 		
 		return css;
